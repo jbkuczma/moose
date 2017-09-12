@@ -34,3 +34,7 @@
 .login_form_input:focus {
     outline: none;
 }
+
+#confirm_password_input {
+    display: none;
+}
