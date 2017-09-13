@@ -1,8 +1,13 @@
 const express = require('express');
+const path = require('path');
 const app = express();
 
+app.get('/', (req, res) => {
+    res.send(__dirname)
+})
 app.get('/login', function(request, response) {
     response.send('login page');
+    // response.sendFile(path.join(__dirname + '/../www/html/login.html')); // uncoment when branches are merged
 });
 
 app.get('/rooms', function(request, response) {
