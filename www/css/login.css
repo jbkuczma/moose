@@ -21,15 +21,21 @@
     width: 100%;
     
     border: none;
-    border-bottom: 1px orange solid;
+    border-bottom: 1px #FC890F solid;
 
     padding: 14px 16px;
     margin-bottom: 10px;
 }
 #login_form_button {
     border: none;
-    border: 1px red solid;
+    border: 1px #0DDDE8 solid;
     background-color: #FFFFFF;
+}
+#login_form_button:hover {
+    border: none;
+    background-color: #0DDDE8;
+    color: #FFFFFF;
+    cursor: pointer;
 }
 .login_form_input:focus {
     outline: none;
