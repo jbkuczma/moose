@@ -12,8 +12,8 @@ app.get('/rooms', function(request, response) {
 });
 
 app.get('/room/:roomCode', function(request, response) {
-    respone.send('a room page')
-})
+    response.send('a room page');
+});
 
 app.listen(3000, function() {
     console.log('Moose started on port 3000. Go to localhost:3000/login');
