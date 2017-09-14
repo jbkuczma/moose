@@ -34,6 +34,7 @@ body {
     padding: 14px 16px;
     margin-bottom: 10px;
 }
+
 #login_form_button {
     background-color: rgba(13,221,232, 0.9);
     color: #EFEFEF;
@@ -46,8 +47,19 @@ body {
 }
 .login_form_input:focus {
     outline: none;
+    border: 2px #555555 solid;
 }
 
 #confirm_password_input {
     display: none;
+}
+
+#createAccountButton {
+    border: none;
+    padding: 8px 10px;
+    background-color: #09969E;
+    color: #EFEFEF;
+}
+#createAccountButton:hover {
+    cursor: pointer;
 }
