@@ -1,1 +1,53 @@
-some css stuff
+.form_ocntainer{
+	position: relative;
+	height: 100vh;
+}
+
+.create_room{
+	width: 50%;
+	top: 50%;
+	left: 50%;
+	-moz-transform: translateY(-50%) translateX(-50%);
+    -webkit-transform: translateY(-50%) translateX(-50%);
+    -o-transform: translateY(-50%) translateX(-50%);
+    transform: translateY(-50%) translateX(-50%);
+    position: absolute;
+    text-align: center;
+}
+
+.create_room_form{
+	display: block;
+	text-align: center;
+	width: 100%;
+
+	border: none;
+	border-bottom: 1px #FC890F solid;
+
+	padding: 14px 16px;
+	margin-bottom: 10px;
+}
+
+#Create_Room{
+	border: 1px #333333 solid;
+	background-color: #FFFFFF;
+	border-radius: 4px;
+
+}
+
+#Join_Code{
+	border: 1px #333333 solid;
+	background-color: #FFFFFF;
+	border-radius: 4px;
+}
+
+#Create_Room:hover{
+	border: none;
+	background-color: #FC890F;
+}
+
+#Join_Code:hover{
+	border: none;
+	background-color: #0DDDE8;
+}
+
+
