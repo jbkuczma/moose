@@ -2,12 +2,23 @@
 UB CSE 442 project
 
 # Running and Installation
-Make sure Node.JS is installed then run the following in the *moose* directory:
+Important: Make sure Node.JS is installed on your machine then follow these steps:
 
+1) Download a zip of the repo from GitHub or clone the repo
 
-    npm install
+        git clone https://github.com/jbkuczma/moose.git
 
-    npm start
+2) Move into the project directory
+
+        cd moose
+
+3) Install dependencies for moose
+
+        npm install
+
+4) Start moose
+
+        npm start
 
 You should see the following prompt:
 
