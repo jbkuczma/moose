@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/jbkuczma/moose#readme",
   "dependencies": {
+    "body-parser": "^1.18.1",
     "express": "^4.15.4"
   }
 }
