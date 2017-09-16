@@ -63,3 +63,19 @@ body {
 #createAccountButton:hover {
     cursor: pointer;
 }
+
+#form_text {
+    width: 100%;
+    display: block;
+    color: #EFEFEF;
+    margin-bottom: 5px;
+}
+
+#form_text h1, img {
+    display: inline-block;  
+    margin: 0 auto;  
+}
+#moose_logo_img {
+    max-width: 75px;
+    max-height: 75px;
+}
