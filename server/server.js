@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const app = express();
 
-app.use(bodyParser.urlencoded({extend: true}));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 /*** GET ***/
@@ -32,11 +32,37 @@ app.post('/login', function(request, response) {
     // username, password, confirm password provided, user is trying to create an account
     else if(username && password && confirmPassword) {
         console.log('create account')
+        /*
+            @TODO: implement once database schema is determined
+            sql = 'SELECT FROM {tableName} (username, password) WHERE username=?';
+            execute sql with username var and check if a row was returned
+            if a row was returned, the username exists -> tell user to choose a new username
+            else
+                check to make sure password === confirmPassword -> if not then tell user
+                create a row in the user table for this username and password. HASH the password before inserting into database
+                sql = 'INSERT INTO {tableName} (username, password) VALUES (username, SHA2(password, 256))
+        */
     }
     else {
+        // @TODO: let user know there was an error
         console.log('error')
     }
     return
+});
+
+app.post('/rooms', function(request, response) {
+    let roomName = request.body.room_name;
+    let roomJoinCode = request.body.join_code;
+
+    
+    if(roomName) {
+        // user is trying to create a room
+        // @TODO: create a row in the rooms table in db for new room -> then send user to room page
+    }
+    else if(roomJoinCode) {
+        // user is trying to join an existing room
+        // @TODO: send user to that room
+    }
 });
 
 app.listen(3000, function() {
