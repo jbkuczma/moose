@@ -1,7 +1,27 @@
 const express = require('express');
+const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const path = require('path');
 const app = express();
+
+// create connection to database
+/* uncomment block for MVP
+let connection = mysql.createConnection({
+  host     : 'localhost',   // db host
+  user     : 'me',          // db user
+  password : 'secret',      // password for user
+  database : 'my_db'        // which database to use
+});
+
+connection.connect();
+
+// example query
+connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
+  if (error) throw error;
+  console.log('The solution is: ', results[0].solution);
+});
+connection.end();
+*/
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
