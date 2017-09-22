@@ -31,18 +31,20 @@ app.use(bodyParser.json());
 // serve login page
 app.get('/login', function(request, response) {
     response.send('login page');
-    // response.sendFile(path.join(__dirname + '/../www/html/login.html')); // uncoment when branches are merged
+    // response.sendFile(path.join(__dirname + '/../www/html/login.html')); // uncomment when branches are merged
 });
 
 // serve page to create a new room or join an existing room
 app.get('/rooms', function(request, response) {
     response.send('create or join a room page');
+    // response.sendFile(path.join(__dirname + '/../www/html/create_room.html')); // uncomment when branches are merged
 });
 
 // serve a specific room page
 app.get('/room/:roomCode', function(request, response) {
     // @TODO: retrieve room info from db (room code, currently playing song, songs in queue, etc.)
     response.send('a room page');
+    // response.sendFile(path.join(__dirname + '/../www/html/the_room.html')); // uncomment when branches are merged
 });
 
 /*** POST REQUESTS ***/
