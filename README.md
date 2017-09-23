@@ -12,14 +12,20 @@ Important: Make sure Node.JS is installed on your machine then follow these step
 
         cd moose
 
-3) Install dependencies for moose
+3) Install dependencies for Moose
 
         npm install
 
-4) Start moose
+4) Start Moose
 
         npm start
 
 You should see the following prompt:
 
     Moose started on port 3000. Go to localhost:3000/login
+
+**Our prototype implements 3 routes that can be visited after following the above steps:**
+
+         localhost:3000/login
+         localhost:3000/rooms
+         localhost:3000/room/1
