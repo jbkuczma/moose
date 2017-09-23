@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <title> Login - Moose </title>
+        <link rel="stylesheet" href="../css/login.css" /> 
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+         <div class="form_container"> 
+            <form class="login_form" action="#">
+                <input type="text" name="username" placeholder="Username" class="login_form_input" id="username_input" />
+                <input type="password" name="password" placeholder="Password" class="login_form_input" id="password_input" />
+                <input type="password" name="confirm-password" placeholder="Confirm Password" class="login_form_input" id="confirm_password_input" />
+                <input type="submit" value="Login" class="login_form_input" id="login_form_button" />
+                <button type="button" onclick="showCreateAccountForm()" id="createAccountButton"> Don't have an account? Click here </button>
+            </form>
+        </div>
+        <script src="../js/login.js"> </script>
+    </body>
+</html>
