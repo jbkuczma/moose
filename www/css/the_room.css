@@ -1,0 +1,40 @@
+body{
+    background-color: #111111;
+}
+
+.card-header{
+	background-color: #0DDDE8;
+}
+
+.card-body{
+	background-color: #eeeeee;
+}
+
+.text-center{
+	color: #0DDDE8;
+}
+
+#roomInfoHeader{
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+.list-group {
+	overflow: scroll !important;
+	max-height: 350px !important;
+}
+#player {
+	max-width: 640px;
+	max-height: 390px;
+}
+
+#roomNameHeader, #roomCodeHeader, #currentSong{
+	color: #ffffff;
+}
+
+#moveSearch, #moveCloseRoom{
+	width: 100%;
+	background-color: #FC890F;
+	color: #ffffff;
+	cursor: pointer;
+}
