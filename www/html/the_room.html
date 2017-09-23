@@ -1,75 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>MooSe</title>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>MooSe</title>
 
-	<!-- Bootstrap -->
-	<link href="../css/bootstrap.css" rel="stylesheet">
-	<link href="../css/bootstrap-grid.css" rel="stylesheet">
+		<!-- Bootstrap -->
+		<link href="../css/bootstrap.css" rel="stylesheet">
+		<link href="../css/bootstrap-grid.css" rel="stylesheet">
+	</head>
+	<body>
 
-</head>
-<body>
-<h1>MooSe</h1>
+	<div class="container-fluid">
 
-<div class="container-fluid">
-
-	<div class="row">
-		<div class="col-md-4">
-			Users in Room
+		<div id="roomInfoHeader">
 			<div class="row">
+				<h3 id="roomNameHeader" class="text-center"> Name of room goes here </h3>
+			</div>
+			<div class="row">
+				<h5 id="roomCodeHeader" class="text-center"> Room Code for room goes here </h5>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-md-4">
+				Users in Room
+				<div class="row">
+					<div class="card">
+						<div class="card-header">
+							<h1 class="card-title">Currently in Room </h1>
+						</div>
+						<div class="card-body">
+							<h5 class="card-user">THIS IS WHERE THE USERS WILL BE</h5>
+							<h5 class="card-user">Dean</h5>
+							<h5 class="card-user">James</h5>
+							<h5 class="card-user">Robert</h5>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<button type="button" class="btn btn-primary btn-md">Leave Room</button>
+				</div>
+				<div class="row">
+					<button type="button" class="btn btn-primary btn-md">Close Room</button>
+				</div>
+			</div>
+
+			<div class="col-md-4" id="player">
+				<!-- YouTube iframe container -->
+			</div>
+
+			<div class="col-md-4">
+				Song Search
+
+				<form class="form-inline">
+					<div class="form-group">
+						<input type="Search" class="form-control" id="Search">
+					</div>
+					<button type="Search" class="btn btn-default">Search</button>
+				</form>
+
 				<div class="card">
 					<div class="card-header">
-						<h1 class="card-title">Currently in Room </h1>
+						<h1 class="card-title">Searched Songs </h1>
 					</div>
 					<div class="card-body">
-						<h5 class="card-user">THIS IS WHERE THE USERS WILL BE</h5>
-						<h5 class="card-user">Dean</h5>
-						<h5 class="card-user">James</h5>
-						<h5 class="card-user">Robert</h5>
+						<h5 class="card-user">THIS IS WHERE SEARCHED SONGS WILL BE</h5>
+						<h5 class="card-user">3005 by Childish Gambino</h5>
+						<h5 class="card-user">Redbone by Childish Gambino</h5>
+						<h5 class="card-user">Hells Bell by ACDC</h5>
 					</div>
-				</div>
-			</div>
-			<div class="row">
-				<button type="button" class="btn btn-primary btn-md">Leave Room</button>
-			</div>
-			<div class="row">
-				<button type="button" class="btn btn-primary btn-md">Close Room</button>
-			</div>
-		</div>
-
-		<div class="col-md-4">
-			The Room
-		</div>
-
-		<div class="col-md-4">
-			Song Search
-
-			<form class="form-inline">
-				<div class="form-group">
-					<input type="Search" class="form-control" id="Search">
-				</div>
-				<button type="Search" class="btn btn-default">Search</button>
-			</form>
-
-			<div class="card">
-				<div class="card-header">
-					<h1 class="card-title">Searched Songs </h1>
-				</div>
-				<div class="card-body">
-					<h5 class="card-user">THIS IS WHERE SEARCHED SONGS WILL BE</h5>
-					<h5 class="card-user">3005 by Childish Gambino</h5>
-					<h5 class="card-user">Redbone by Childish Gambino</h5>
-					<h5 class="card-user">Hells Bell by ACDC</h5>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
-</body>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<script>
+		// 2. This code loads the IFrame Player API code asynchronously.
+		var tag = document.createElement('script');
+
+		tag.src = "https://www.youtube.com/iframe_api";
+		var firstScriptTag = document.getElementsByTagName('script')[0];
+		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+		// 3. This function creates an <iframe> (and YouTube player)
+		//    after the API code downloads.
+		var player;
+		function onYouTubeIframeAPIReady() {
+			player = new YT.Player('player', {
+			height: '390',
+			width: '640',
+			videoId: 'tG35R8F2j8k',
+			playerVars: {
+				showinfo: 0,
+				controls: 0,
+				rel: 0,
+				disablekb: 1
+			},
+			events: {
+				'onReady': onPlayerReady,
+				'onStateChange': onPlayerStateChange
+			}
+			});
+		}
+
+		// 4. The API will call this function when the video player is ready.
+		function onPlayerReady(event) {
+			event.target.playVideo();
+		}
+
+		// 5. The API calls this function when the player's state changes.
+		//    The function indicates that when playing a video (state=1),
+		//    the player should play for six seconds and then stop.
+		var done = false;
+		function onPlayerStateChange(event) {
+			// if (event.data == YT.PlayerState.PLAYING && !done) {
+			//   setTimeout(stopVideo, 6000);
+			//   done = true;
+			// }  
+			if (event.data == YT.PlayerState.ENDED) { // or 0
+			player.loadVideoById('Kp7eSUU9oy8') // change to redbone
+			}
+		}
+		function stopVideo() {
+			player.stopVideo();
+		}
+		//  setTimeout(function() {
+			
+		//  }, 10000);
+		</script>
+	</body>
 </html>
