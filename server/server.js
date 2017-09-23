@@ -23,6 +23,7 @@ connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
 connection.end();
 */
 
+app.use(express.static('www'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
