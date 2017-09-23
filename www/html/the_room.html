@@ -4,29 +4,93 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>MooSe</title>
+		<title> Room - Moose </title>
 
 		<!-- Bootstrap -->
 		<link href="../css/bootstrap.css" rel="stylesheet">
 		<link href="../css/bootstrap-grid.css" rel="stylesheet">
+
+		<style>
+			.list-group {
+				overflow: scroll !important;
+				max-height: 350px !important;
+			}
+			#player {
+				max-width: 640px;
+				max-height: 390px;
+			}
+		</style>
 	</head>
 	<body>
-		<div class="container-fluid">
-			<div id="roomInfoHeader">
-				<div class="row">
-					<h3 id="roomNameHeader" class="text-center"> Name of room goes here </h3>
-				</div>
-				<div class="row">
-					<h5 id="roomCodeHeader" class="text-center"> Room Code for room goes here </h5>
+		<div class="container">
+			<div class="row d-flex justify-content-center">
+				<p id="roomNameHeader"> Name of room goes here </p>
+			</div>
+			<div class="row d-flex justify-content-center">
+				<p id="roomCodeHeader"> Room Code for room goes here </p>
+			</div>
+			<div class="row d-flex justify-content-center">
+				<!-- <button type="button" class="btn btn-primary btn-md">Leave Room</button> -->
+				 <button type="button" class="btn btn-primary btn-md">Close Room</button> 
+			</div>
+			<div class="row justify-content-center">
+				 <div id="roomInfoHeader" class="d-flex flex-column"> 
+					<div class="row">
+						<div id="player" class="embed-responsive-item">			
+
+						</div> 
+					</div> 
+					<div class="row d-flex justify-content-center">
+						<span> Name of song here </span>
+					 </div> 
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-4">
-					Users in Room
-					<div class="row">
+					<span> Up Next </span>
+					<ul class="list-group">
+						<li class="list-group-item">Cras justo odio</li>
+						<li class="list-group-item">Dapibus ac facilisis in</li>
+						<li class="list-group-item">Morbi leo risus</li>
+						<li class="list-group-item">Porta ac consectetur ac</li>
+						<li class="list-group-item">Vestibulum at eros</li>
+						<li class="list-group-item">Cras justo odio</li>
+						<li class="list-group-item">Dapibus ac facilisis in</li>
+						<li class="list-group-item">Morbi leo risus</li>
+						<li class="list-group-item">Porta ac consectetur ac</li>
+						<li class="list-group-item">Vestibulum at eros</li>
+						<li class="list-group-item">Cras justo odio</li>
+						<li class="list-group-item">Dapibus ac facilisis in</li>
+						<li class="list-group-item">Morbi leo risus</li>
+						<li class="list-group-item">Porta ac consectetur ac</li>
+						<li class="list-group-item">Vestibulum at eros</li>
+					</ul>
+				</div>
+				<div class="col-md-4">
+					<div class="card">
+						<div class="card-header">
+							<h1 class="card-title"> Search Results </h1>
+						</div>
+						<div class="card-body">
+							<h5 class="card-user">THIS IS WHERE SEARCHED SONGS WILL BE</h5>
+							<h5 class="card-user">3005 by Childish Gambino</h5>
+							<h5 class="card-user">Redbone by Childish Gambino</h5>
+							<h5 class="card-user">Hells Bell by ACDC</h5>
+						</div>
+					</div>
+					<form class="form-inline">
+						<div class="form-group">
+							<input type="Search" class="form-control" id="Search" placeholder="Search for music">
+							<button type="button" class="btn btn-default"> Search </button>
+						</div>
+						
+					</form>
+				</div>
+				<div class="col-md-4">
+					<div class="row d-flex justify-content-center">
 						<div class="card">
 							<div class="card-header">
-								<h1 class="card-title">Currently in Room </h1>
+								<h1 class="card-title"> Users currently in Room </h1>
 							</div>
 							<div class="card-body">
 								<h5 class="card-user">THIS IS WHERE THE USERS WILL BE</h5>
@@ -34,35 +98,6 @@
 								<h5 class="card-user">James</h5>
 								<h5 class="card-user">Robert</h5>
 							</div>
-						</div>
-					</div>
-					<div class="row">
-						<button type="button" class="btn btn-primary btn-md">Leave Room</button>
-					</div>
-					<div class="row">
-						<button type="button" class="btn btn-primary btn-md">Close Room</button>
-					</div>
-				</div>
-				<div class="col-md-4" id="player">
-					<!-- YouTube iframe container -->
-				</div>
-				<div class="col-md-4">
-					Song Search
-					<form class="form-inline">
-						<div class="form-group">
-							<input type="Search" class="form-control" id="Search">
-						</div>
-						<button type="Search" class="btn btn-default">Search</button>
-					</form>
-					<div class="card">
-						<div class="card-header">
-							<h1 class="card-title">Searched Songs </h1>
-						</div>
-						<div class="card-body">
-							<h5 class="card-user">THIS IS WHERE SEARCHED SONGS WILL BE</h5>
-							<h5 class="card-user">3005 by Childish Gambino</h5>
-							<h5 class="card-user">Redbone by Childish Gambino</h5>
-							<h5 class="card-user">Hells Bell by ACDC</h5>
 						</div>
 					</div>
 				</div>
