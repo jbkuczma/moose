@@ -1,6 +1,7 @@
  html {
     overflow: hidden; /* prevent over-scrolling of page */
     height: 100%;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 } 
 
 body {
