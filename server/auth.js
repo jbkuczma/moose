@@ -5,20 +5,32 @@
 const mysql = require('mysql');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const hasher = require('./hash')
 
 // create connection to database
-/*
 let connection = mysql.createConnection({
   host     : 'localhost',   // db host
-  user     : 'me',          // db user
-  password : 'secret',      // password for user
-  database : 'my_db'        // which database to use
-});*/
+  user     : 'db_user',          // db user
+  password : 'db_pass',      // password for user
+  database : 'db'        // which database to use
+});
 
 passport.use('login', new LocalStrategy(
     function(username, password, done) {
         // query db
-        return done(null, username);
+        let sql = 'SELECT username, password, salt FROM users WHERE username=?';
+        connection.query(sql, username, function(error, results, fields) {
+            if(error) {
+                throw error;
+            }
+
+            let hashedUser = hasher.sha512(password, results[0].salt);
+            let storedPassword = results[0].password;
+
+            if(username == results[0].username && hashedUser.passwordHash == storedPassword) {
+                 return done(null, username);
+            }
+        });   
     }
 ));
 
