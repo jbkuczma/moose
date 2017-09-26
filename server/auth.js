@@ -34,10 +34,34 @@ passport.use('login', new LocalStrategy(
     }
 ));
 
-passport.use('create-account', new LocalStrategy(
-    function(username, password, done) {
-        // query db for existing username
-        return done(null, username);
+passport.use('create-account', new LocalStrategy({ passReqToCallback: true },
+    function(req, username, password, done) {
+        let username1 = req.body.username;
+        let password1 = req.body.password;
+        let confirmPassword = req.body.confirm_password;
+        if (password1 === confirmPassword) {
+            // query db to see if username exists
+            let sql = 'SELECT username FROM users WHERE username=?';
+            connection.query(sql, username1, function(error, results, fields) {
+                if(results[0]) {
+                    console.log('username exists')
+                } else {
+                    let hashedUser = hasher.saltAndHashPassword(password);
+                    let hashedPassword = hashedUser.passwordHash;
+                    let salt = hashedUser.salt;
+
+                    // create new user
+                    sql = 'INSERT INTO users (username, password, salt, created_at) VALUES (?, ?, ?, ?)';
+                    connection.query(sql, [username1, hashedPassword, salt, new Date()], function(error, results, fields) {
+                        if(!error) {
+                            return done(null, username);
+                        }
+                    });
+                }
+            });
+        }
+
+        // return done(null, username);
     }
 ));
 
