@@ -2,6 +2,8 @@ const express = require('express');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const path = require('path');
+const session = require('express-session');
+const auth = require('./auth');
 const app = express();
 
 // create connection to database
@@ -23,9 +25,19 @@ connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
 connection.end();
 */
 
+/*** Express config ***/
 app.use(express.static('www'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+
+app.use(session({ 
+    secret: 'moose',
+    saveUninitialized: false,
+    resave: true
+}));
+// for auth with passport
+app.use(auth.initialize());
+app.use(auth.session());
 
 /*** GET REQUESTS ***/
 
@@ -48,16 +60,28 @@ app.get('/room/:roomCode', function(request, response) {
 /*** POST REQUESTS ***/
 
 // log a user in
-app.post('/account/login', function(request, response) {
+app.post('/account/login', auth.authenticate('login', {
+    successRedirect: '/rooms',
+    failureRedirect: '/login',
+    failureFlash: true
+}));
+
+app.post('/account/create', auth.authenticate('create-account', {
+    successRedirect: '/rooms',
+    failureRedirect: '/login',
+    failureFlash: true
+}));
+/*
+app.post('/account/', function(request, response) {
     let username = request.body.username;
     let password = request.body.password;
-    console.log('login')
+    
     /*
         @TODO: implement once database schema is determined, log user in
         - check if password provided matches hashed password in db
     */
 
-});
+/*});
 
 // create an account
 app.post('/account/create', function(request, response) {
@@ -76,7 +100,7 @@ app.post('/account/create', function(request, response) {
             create a row in the user table for this username and password. HASH the password before inserting into database
             sql = 'INSERT INTO {tableName} (username, password) VALUES (username, SHA2(password, 256))
     */
-});
+/*});*/
 
 // create a room
 app.post('/rooms/create', function(request, response) {
