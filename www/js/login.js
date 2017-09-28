@@ -9,3 +9,18 @@ function showCreateAccountForm() {
     submitButton.value = 'Create Account'; // change text in login button
     submitForm.action = '/account/create'; // change action of form 
 }
+
+;(function() {
+    var errorText = document.getElementById('errorText');
+    errorText.display = 'none';
+    var hasError = window.location.search;
+    var status = hasError.split('=')[1];
+    if (status === 'failedLogin') {
+        errorText.textContent = 'Login failed. Make sure your username and password are correct.';
+        errorText.style.display = 'block';
+    }
+    else if (status === 'failedCreateAccount') {
+        errorText.textContent = 'Account creation failed. The username you selected is taken.';
+        errorText.style.display = 'block';
+    }
+})();

@@ -62,14 +62,14 @@ app.get('/room/:roomCode', function(request, response) {
 // log a user in
 app.post('/account/login', auth.authenticate('login', {
     successRedirect: '/rooms',
-    failureRedirect: '/login',
-    failureFlash: true
+    failureRedirect: '/login?status=failedLogin',
+    failureFlash: false
 }));
 
 app.post('/account/create', auth.authenticate('create-account', {
     successRedirect: '/rooms',
-    failureRedirect: '/login',
-    failureFlash: true
+    failureRedirect: '/login?status=failedCreateAccount',
+    failureFlash: false
 }));
 /*
 app.post('/account/', function(request, response) {

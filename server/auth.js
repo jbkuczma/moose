@@ -10,31 +10,49 @@ const hasher = require('./hash')
 // create connection to database
 let connection = mysql.createConnection({
   host     : 'localhost',   // db host
-  user     : 'db_user',          // db user
-  password : 'db_pass',      // password for user
-  database : 'db'        // which database to use
+  user     : 'root',          // db user
+  password : 'password',      // password for user
+  database : 'moose'        // which database to use
 });
 
-passport.use('login', new LocalStrategy(
+/**
+ * See if string only contains letters and numbers
+ * @param {String} inputString - string to test
+ * @param {number} minimumLength - minimum length of string to test
+ */
+function isValidInput(inputString, minimumLength) {
+    let regex = `/^[a-zA-Z0-9]{${minimumLength},}$/`;
+    return inputString.match(regex);
+}
+
+passport.use('login', new LocalStrategy({ failWithError: true },
     function(username, password, done) {
         // query db
         let sql = 'SELECT username, password, salt FROM users WHERE username=?';
         connection.query(sql, username, function(error, results, fields) {
             if(error) {
-                throw error;
+                return done(error);
             }
+
+            if(!results[0]) {
+                return done(null, false);
+            }
+
+            console.log(results);
 
             let hashedUser = hasher.sha512(password, results[0].salt);
             let storedPassword = results[0].password;
 
             if(username == results[0].username && hashedUser.passwordHash == storedPassword) {
                  return done(null, username);
+            } else {
+                return done(null, false);
             }
         });   
     }
 ));
 
-passport.use('create-account', new LocalStrategy({ passReqToCallback: true },
+passport.use('create-account', new LocalStrategy({ passReqToCallback: true, failWithError: true },
     function(req, username, password, done) {
         let username1 = req.body.username;
         let password1 = req.body.password;
@@ -60,8 +78,6 @@ passport.use('create-account', new LocalStrategy({ passReqToCallback: true },
                 }
             });
         }
-
-        // return done(null, username);
     }
 ));
 
@@ -73,4 +89,5 @@ passport.serializeUser(function(username, done) {
 passport.deserializeUser(function(username, done) {
     done(null, username);
 });
+
 module.exports = passport;
