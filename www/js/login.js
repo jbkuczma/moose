@@ -3,7 +3,9 @@ function showCreateAccountForm() {
     var createAccountButton = document.getElementById('createAccountButton');
     var submitButton = document.getElementById('login_form_button');
     var submitForm = document.getElementsByClassName('login_form')[0];
+    var errorText = document.getElementById('errorText');
 
+    errorText.style.display = 'none';
     confirmPasswordInput.style.display = 'block'; // reveal input for confirm password
     createAccountButton.style.display = 'none'; // hide the create account button
     submitButton.value = 'Create Account'; // change text in login button
@@ -12,7 +14,7 @@ function showCreateAccountForm() {
 
 ;(function() {
     var errorText = document.getElementById('errorText');
-    errorText.display = 'none';
+    errorText.style.display = 'none';
     var hasError = window.location.search;
     var status = hasError.split('=')[1];
     if (status === 'failedLogin') {
