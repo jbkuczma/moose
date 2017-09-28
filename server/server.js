@@ -3,6 +3,7 @@ const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const path = require('path');
 const session = require('express-session');
+const os = require('os');
 const auth = require('./auth');
 const app = express();
 
@@ -122,6 +123,23 @@ app.post('/room/:roomCode/search', function(request, response) {
 
 
 // starts Moose on port 3000
-app.listen(3000, function() {
-    console.log('Moose started on port 3000. Go to localhost:3000/login');
+app.listen(3000, '0.0.0.0', function() {
+    let userIP = ipAddress()
+    console.log('Moose started on port 3000');
+    console.log(`Visit localhost:3000/login or ${userIP}/login`);
 });
+
+
+/**
+ * helper to get user's ip address
+ */
+let ipAddress = function() {
+    let interfaces = os.networkInterfaces()
+    let address = '';
+    for(let dev in interfaces) {
+        interfaces[dev].filter(function(details) {
+            details.family === 'IPv4' && details.internal === false ? address = details.address : undefined;
+        });
+    }
+    return address;
+}
