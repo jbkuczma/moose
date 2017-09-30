@@ -10,11 +10,11 @@
 	<div class="form_container">
 		<h1 id= "headers1">Create or join a room</h1>
 		<h3 id = "headers2">and start streaming music effortlessly</h3>
-		<form class = "create_room" action="/room/create" method="post">
+		<form class = "create_room" action="/rooms/create" method="post">
 			<input type="text" name="room_name" placeholder="Room Name" class="create_room_form" id="room_name_id" />
 			<input type="submit" id="Create_Room" value="Create Room" />
 		</form>
-	 	<form class="join" action="/room/join" method="post">
+	 	<form class="join" action="/rooms/join" method="post">
 	 		<input type="text" name="join_code" placeholder="Enter Join Code" class="create_room_form" id="join_code_id" />
 			<input type="submit" id="Join_Code" value= "Join Room" />
 	 	</form>
