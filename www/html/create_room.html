@@ -18,7 +18,18 @@
 	 		<input type="text" name="join_code" placeholder="Enter Join Code" class="create_room_form" id="join_code_id" />
 			<input type="submit" id="Join_Code" value= "Join Room" />
 	 	</form>
+			<span id="errorText"></span>
 	</div>
+			<script type="text/javascript">
+				var errorText = document.getElementById('errorText');
+				errorText.style.display = 'none';
+				var hasError = window.location.search;
+				var status = hasError.split('=')[1];
+				if(status === 'noRoom') {
+                    errorText.textContent = 'Room join code invalid';
+                    errorText.style.display = 'block';
+                }
+			</script>
 </body>
 </html>
 

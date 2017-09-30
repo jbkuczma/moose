@@ -84,6 +84,12 @@ app.post('/rooms/create', function(request, response) {
 // join an existing room via room code
 app.post('/rooms/join', function(request, response) {
     let roomJoinCode = request.body.join_code;
+    let SQL = 'SELECT room_code FROM rooms WHERE room_code=?';
+    connection.query(SQL, roomJoinCode, function (error, results, fields){
+        if (error) {throw error;}
+        if (results[0]) {response.redirect('/room/' + roomJoinCode)}
+        else {response.redirect("/rooms?status=noRoom")}
+    })
     // @TODO: send user to that room
 });
 
