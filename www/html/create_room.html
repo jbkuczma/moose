@@ -17,8 +17,8 @@
 	 	<form class="join" action="/rooms/join" method="post">
 	 		<input type="text" name="join_code" placeholder="Enter Join Code" class="create_room_form" id="join_code_id" />
 			<input type="submit" id="Join_Code" value= "Join Room" />
-	 	</form>
 			<span id="errorText"></span>
+	 	</form>
 	</div>
 			<script type="text/javascript">
 				var errorText = document.getElementById('errorText');
@@ -28,6 +28,7 @@
 				if(status === 'noRoom') {
                     errorText.textContent = 'Room join code invalid';
                     errorText.style.display = 'block';
+                    errorText.style.color = '#f44336'
                 }
 			</script>
 </body>
