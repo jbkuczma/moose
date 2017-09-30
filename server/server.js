@@ -72,36 +72,6 @@ app.post('/account/create', auth.authenticate('create-account', {
     failureRedirect: '/login?status=failedCreateAccount',
     failureFlash: false
 }));
-/*
-app.post('/account/', function(request, response) {
-    let username = request.body.username;
-    let password = request.body.password;
-    
-    /*
-        @TODO: implement once database schema is determined, log user in
-        - check if password provided matches hashed password in db
-    */
-
-/*});
-
-// create an account
-app.post('/account/create', function(request, response) {
-    let username = request.body.username;
-    let password = request.body.password;
-    let confirmPassword = request.body.confirm_password;
-
-    console.log('create account')
-    /*
-        @TODO: implement once database schema is determined
-        sql = 'SELECT FROM {tableName} (username, password) WHERE username=?';
-        execute sql with username var and check if a row was returned
-        if a row was returned, the username exists -> tell user to choose a new username
-        else
-            check to make sure password === confirmPassword -> if not then tell user
-            create a row in the user table for this username and password. HASH the password before inserting into database
-            sql = 'INSERT INTO {tableName} (username, password) VALUES (username, SHA2(password, 256))
-    */
-/*});*/
 
 // create a room
 app.post('/rooms/create', function(request, response) {
@@ -126,7 +96,7 @@ app.post('/room/:roomCode/search', function(request, response) {
 app.listen(3000, '0.0.0.0', function() {
     let userIP = ipAddress()
     console.log('Moose started on port 3000');
-    console.log(`Visit localhost:3000/login or ${userIP}/login`);
+    console.log(`Visit localhost:3000/login or ${userIP}:3000/login`);
 });
 
 
