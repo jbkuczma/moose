@@ -8,12 +8,11 @@ const auth = require('./auth');
 const app = express();
 
 // create connection to database
-/* uncomment block for MVP
 let connection = mysql.createConnection({
   host     : 'localhost',   // db host
-  user     : 'me',          // db user
-  password : 'secret',      // password for user
-  database : 'my_db'        // which database to use
+  user     : 'root',          // db user
+  password : 'password',      // password for user
+  database : 'moose'        // which database to use
 });
 
 connection.connect();
@@ -24,7 +23,7 @@ connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
   console.log('The solution is: ', results[0].solution);
 });
 connection.end();
-*/
+
 
 /*** Express config ***/
 app.use(express.static('www'));
@@ -77,6 +76,15 @@ app.post('/account/create', auth.authenticate('create-account', {
 // create a room
 app.post('/rooms/create', function(request, response) {
     let roomName = request.body.room_name;
+    if (roomName.length() <= 15 || roomName === "SaturdaysAreForTheBoys"){
+        //generates random 5 digit code that cannot be shorter than 5 digits
+        let random_numb = Math.floor(Math.random()*89999 + 10000);
+        let SQL = 'INSERT INTO ROOMS (room_name, room_code, created_at, room_owner_name) VALUES (?, ?, ?, ?)';
+        connection.query(SQL, [roomName, random_numb, new Date(), request.session.passport.user], function (error, results, fields) {
+            if (error){throw error;}
+            app.get('/room/' + random_numb)
+        });
+    }
     // @TODO: create a row in the rooms table in db for new room -> then send user to room page
 });
 
