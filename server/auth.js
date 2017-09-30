@@ -20,8 +20,7 @@ let connection = mysql.createConnection({
  * @param {String} inputString - string to test
  */
 function isValidInput(inputString) {
-    let regex = `/^[a-zA-Z0-9]{,16}$/`; // regex to limit username input string to letters and numbers and a max length of 16
-    return inputString.match(regex);
+    return inputString.match(/^[a-zA-Z0-9]{3,16}$/)[0]; // regex to limit username input string to letters and numbers and a max length of 16
 }
 
 passport.use('login', new LocalStrategy({ failWithError: true },
@@ -65,7 +64,7 @@ passport.use('create-account', new LocalStrategy({ passReqToCallback: true, fail
                     let hashedPassword = hashedUser.passwordHash;
                     let salt = hashedUser.salt;
 
-                    if(isValidInput(username)) {
+                    if(isValidInput(username1)) {
                         // create new user
                         sql = 'INSERT INTO users (username, password, salt, created_at) VALUES (?, ?, ?, ?)';
                         connection.query(sql, [username1, hashedPassword, salt, new Date()], function(error, results, fields) {
