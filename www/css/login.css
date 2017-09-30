@@ -89,3 +89,8 @@ body {
     max-width: 75px;
     max-height: 75px;
 }
+
+#errorText {
+    color: #f44336;
+    display: none;
+}

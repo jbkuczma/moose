@@ -2,6 +2,9 @@ const express = require('express');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const path = require('path');
+const session = require('express-session');
+const os = require('os');
+const auth = require('./auth');
 const app = express();
 
 // create connection to database
@@ -23,9 +26,19 @@ connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
 connection.end();
 */
 
+/*** Express config ***/
 app.use(express.static('www'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+
+app.use(session({ 
+    secret: 'moose',
+    saveUninitialized: false,
+    resave: true
+}));
+// for auth with passport
+app.use(auth.initialize());
+app.use(auth.session());
 
 /*** GET REQUESTS ***/
 
@@ -36,6 +49,7 @@ app.get('/login', function(request, response) {
 
 // serve page to create a new room or join an existing room
 app.get('/rooms', function(request, response) {
+    console.log(session)
     response.sendFile(path.join(__dirname + '/../www/html/create_room.html'));
 });
 
@@ -48,35 +62,17 @@ app.get('/room/:roomCode', function(request, response) {
 /*** POST REQUESTS ***/
 
 // log a user in
-app.post('/account/login', function(request, response) {
-    let username = request.body.username;
-    let password = request.body.password;
-    console.log('login')
-    /*
-        @TODO: implement once database schema is determined, log user in
-        - check if password provided matches hashed password in db
-    */
+app.post('/account/login', auth.authenticate('login', {
+    successRedirect: '/rooms',
+    failureRedirect: '/login?status=failedLogin',
+    failureFlash: false
+}));
 
-});
-
-// create an account
-app.post('/account/create', function(request, response) {
-    let username = request.body.username;
-    let password = request.body.password;
-    let confirmPassword = request.body.confirm_password;
-
-    console.log('create account')
-    /*
-        @TODO: implement once database schema is determined
-        sql = 'SELECT FROM {tableName} (username, password) WHERE username=?';
-        execute sql with username var and check if a row was returned
-        if a row was returned, the username exists -> tell user to choose a new username
-        else
-            check to make sure password === confirmPassword -> if not then tell user
-            create a row in the user table for this username and password. HASH the password before inserting into database
-            sql = 'INSERT INTO {tableName} (username, password) VALUES (username, SHA2(password, 256))
-    */
-});
+app.post('/account/create', auth.authenticate('create-account', {
+    successRedirect: '/rooms',
+    failureRedirect: '/login?status=failedCreateAccount',
+    failureFlash: false
+}));
 
 // create a room
 app.post('/rooms/create', function(request, response) {
@@ -98,6 +94,23 @@ app.post('/room/:roomCode/search', function(request, response) {
 
 
 // starts Moose on port 3000
-app.listen(3000, function() {
-    console.log('Moose started on port 3000. Go to localhost:3000/login');
+app.listen(3000, '0.0.0.0', function() {
+    let userIP = ipAddress()
+    console.log('Moose started on port 3000');
+    console.log(`Visit localhost:3000/login or ${userIP}:3000/login`);
 });
+
+
+/**
+ * helper to get user's ip address
+ */
+let ipAddress = function() {
+    let interfaces = os.networkInterfaces()
+    let address = '';
+    for(let dev in interfaces) {
+        interfaces[dev].filter(function(details) {
+            details.family === 'IPv4' && details.internal === false ? address = details.address : undefined;
+        });
+    }
+    return address;
+}

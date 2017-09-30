@@ -7,7 +7,7 @@
     </head>
     <body>
          <div class="form_container"> 
-            <form class="login_form" action="#">
+            <form class="login_form" action="/account/login" method="POST">
                 <div id="form_text">
                     <div>
                         <img src="../img/MooseLogo.PNG" id="moose_logo_img" />
@@ -19,9 +19,10 @@
                 </div>
                 <input type="text" name="username" placeholder="Username" class="login_form_input" id="username_input" />
                 <input type="password" name="password" placeholder="Password" class="login_form_input" id="password_input" />
-                <input type="password" name="confirm-password" placeholder="Confirm Password" class="login_form_input" id="confirm_password_input" />
+                <input type="password" name="confirm_password" placeholder="Confirm Password" class="login_form_input" id="confirm_password_input" />
                 <input type="submit" value="Login" class="login_form_input" id="login_form_button" />
                 <button type="button" onclick="showCreateAccountForm()" id="createAccountButton"> Don't have an account? Click here </button>
+                <span id="errorText"></span>
             </form>
         </div>
         <script src="../js/login.js"> </script>
