@@ -49,6 +49,7 @@ app.get('/login', function(request, response) {
 
 // serve page to create a new room or join an existing room
 app.get('/rooms', function(request, response) {
+    console.log(session)
     response.sendFile(path.join(__dirname + '/../www/html/create_room.html'));
 });
 

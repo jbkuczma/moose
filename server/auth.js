@@ -18,10 +18,9 @@ let connection = mysql.createConnection({
 /**
  * See if string only contains letters and numbers
  * @param {String} inputString - string to test
- * @param {number} minimumLength - minimum length of string to test
  */
-function isValidInput(inputString, minimumLength) {
-    let regex = `/^[a-zA-Z0-9]{${minimumLength},}$/`;
+function isValidInput(inputString) {
+    let regex = `/^[a-zA-Z0-9]{,16}$/`; // regex to limit username input string to letters and numbers and a max length of 16
     return inputString.match(regex);
 }
 
@@ -37,8 +36,6 @@ passport.use('login', new LocalStrategy({ failWithError: true },
             if(!results[0]) {
                 return done(null, false);
             }
-
-            console.log(results);
 
             let hashedUser = hasher.sha512(password, results[0].salt);
             let storedPassword = results[0].password;
@@ -62,19 +59,23 @@ passport.use('create-account', new LocalStrategy({ passReqToCallback: true, fail
             let sql = 'SELECT username FROM users WHERE username=?';
             connection.query(sql, username1, function(error, results, fields) {
                 if(results[0]) {
-                    console.log('username exists')
+                    return done(null, false);
                 } else {
                     let hashedUser = hasher.saltAndHashPassword(password);
                     let hashedPassword = hashedUser.passwordHash;
                     let salt = hashedUser.salt;
 
-                    // create new user
-                    sql = 'INSERT INTO users (username, password, salt, created_at) VALUES (?, ?, ?, ?)';
-                    connection.query(sql, [username1, hashedPassword, salt, new Date()], function(error, results, fields) {
-                        if(!error) {
-                            return done(null, username);
-                        }
-                    });
+                    if(isValidInput(username)) {
+                        // create new user
+                        sql = 'INSERT INTO users (username, password, salt, created_at) VALUES (?, ?, ?, ?)';
+                        connection.query(sql, [username1, hashedPassword, salt, new Date()], function(error, results, fields) {
+                            if(!error) {
+                                return done(null, username);
+                            }
+                        });
+                    } else {
+                        return done(null, false);
+                    }              
                 }
             });
         }
