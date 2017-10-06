@@ -52,44 +52,55 @@ app.get('/rooms', function(request, response) {
 // serve a specific room page
 app.get('/room/:roomCode', function(request, response) {
     // @TODO: retrieve room info from db (room code, currently playing song, songs in queue, etc.)
-    // fake data to show that the template is working
-    roomData = {
-        isUserHost: true,
-        roomName: 'Test',
-        roomCode: '4444',
-        currentSongName: '3005 - Childish Gambino',
-        currenSongID: 'tG35R8F2j8k',
-        usersInRoom: [
-            {
-                username: 'Dean'
-            },
-            {
-                username: 'James'
-            },
-            {
-                username: 'RJ'
-            }
-        ],
-        queue: [
-            {
-                songID: 'test1',
-                songName: 'Major key'
-            },
-            {
-                songID: 'test2',
-                songName: 'Another one'
-            },
-            {
-                songID: 'test3',
-                songName: 'Bless up'
-            },
-            {
-                songID: 'test4',
-                songName: 'Moose'
-            },
-        ]
-    }
-    response.render('the_room', roomData);
+    
+    // beginning to get data for specific room from database
+    let roomCode = request.params.roomCode;
+    let sql = 'SELECT room_name, room_owner_name FROM rooms WHERE room_code=?';
+    connection.query(sql, roomCode, function (error, results, fields) {
+        if(error) {
+            throw error;
+        }
+        let roomName = results[0].room_name;
+        let roomOwner = results[0].room_owner_name;
+        let isUserRoomOwner = (roomOwner === request.session.passport.user);
+        roomData = {
+            isUserHost: isUserRoomOwner,
+            roomName: roomName,
+            roomCode: roomCode,
+            currentSongName: '3005 - Childish Gambino',
+            currenSongID: 'tG35R8F2j8k',
+            usersInRoom: [
+                {
+                    username: 'Dean'
+                },
+                {
+                    username: 'James'
+                },
+                {
+                    username: 'RJ'
+                }
+            ],
+            queue: [
+                {
+                    songID: 'test1',
+                    songName: 'Major key'
+                },
+                {
+                    songID: 'test2',
+                    songName: 'Another one'
+                },
+                {
+                    songID: 'test3',
+                    songName: 'Bless up'
+                },
+                {
+                    songID: 'test4',
+                    songName: 'Moose'
+                },
+            ]
+        }
+        response.render('the_room', roomData);
+    });
 });
 
 /*** POST REQUESTS ***/
