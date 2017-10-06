@@ -3,6 +3,7 @@ const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const path = require('path');
 const session = require('express-session');
+const exphbs  = require('express-handlebars');
 const os = require('os');
 const auth = require('./auth');
 const app = express();
@@ -19,7 +20,10 @@ connection.connect();
 
 
 /*** Express config ***/
-app.use(express.static('www'));
+app.set('views', path.join(__dirname + '/../www/html_templates/')); // where to look for templates
+app.engine('handlebars', exphbs({}));
+app.set('view engine', 'handlebars'); // for templates
+app.use(express.static('www')); // for static pages
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
@@ -48,7 +52,44 @@ app.get('/rooms', function(request, response) {
 // serve a specific room page
 app.get('/room/:roomCode', function(request, response) {
     // @TODO: retrieve room info from db (room code, currently playing song, songs in queue, etc.)
-    response.sendFile(path.join(__dirname + '/../www/html/the_room.html'));
+    // fake data to show that the template is working
+    roomData = {
+        isUserHost: true,
+        roomName: 'Test',
+        roomCode: '4444',
+        currentSongName: '3005 - Childish Gambino',
+        currenSongID: 'tG35R8F2j8k',
+        usersInRoom: [
+            {
+                username: 'Dean'
+            },
+            {
+                username: 'James'
+            },
+            {
+                username: 'RJ'
+            }
+        ],
+        queue: [
+            {
+                songID: 'test1',
+                songName: 'Major key'
+            },
+            {
+                songID: 'test2',
+                songName: 'Another one'
+            },
+            {
+                songID: 'test3',
+                songName: 'Bless up'
+            },
+            {
+                songID: 'test4',
+                songName: 'Moose'
+            },
+        ]
+    }
+    response.render('the_room', roomData);
 });
 
 /*** POST REQUESTS ***/

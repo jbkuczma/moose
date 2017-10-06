@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title> Room - Moose </title>
+		<!-- Bootstrap -->
+		<link href="../css/bootstrap.css" rel="stylesheet">
+		<link href="../css/bootstrap-grid.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../css/the_room.css">
+	</head>
+	<body>
+		<div class="container">
+			<div class="row d-flex justify-content-center">
+				<p id="roomNameHeader"> {{roomName}} </p>
+			</div>
+			<div class="row d-flex justify-content-center">
+				<p id="roomCodeHeader"> {{roomCode}} </p>
+			</div>
+			<div class="row justify-content-center">
+				 <div id="roomInfoHeader" class="d-flex flex-column"> 
+					<div class="row">
+						<div id="player" class="embed-responsive-item">			
+
+						</div> 
+					</div> 
+					<div class="row d-flex justify-content-center">
+						<span id = "currentSong" id="{{currenSongID}}"> {{currentSongName}} </span>
+					 </div> 
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+				<div class="card">
+						<div class="card-header">
+							<h1 class="card-title"> Up Next </h1>
+						</div>
+						<div class="card-body">
+							<ul class="list-group">
+								{{#queue}}
+									<li class="list-group-item" id="{{songID}}"> {{songName}} </li>
+								{{/queue}}
+							</ul>
+						</div>
+					</div>	
+				</div>
+				<div class="col-md-4">
+					<div class="card">
+						<div class="card-header">
+							<h1 class="card-title"> Search Results </h1>
+						</div>
+						<div class="card-body">
+							<h5 class="card-user">THIS IS WHERE SEARCHED SONGS WILL BE</h5>
+							<h5 class="card-user">3005 by Childish Gambino</h5>
+							<h5 class="card-user">Redbone by Childish Gambino</h5>
+							<h5 class="card-user">Hells Bell by ACDC</h5>
+						</div>
+					</div>
+					<form class="form">
+						<div class="form-group">
+							<input type="Search" class="form-control" id="Search" placeholder="Search for music">
+							<button type="button" id = "moveSearch" class="btn btn-default"> Search </button>
+						</div>
+						
+					</form>
+				</div>
+				<div class="col-md-4">
+					<div class="row d-flex justify-content-center">
+						<div class="card">
+							<div class="card-header">
+								<h1 class="card-title"> Users currently in Room </h1>
+							</div>
+							<div class="card-body">
+								{{#usersInRoom}} 
+								<h5 class="card-user">
+									{{username}}
+								</h5>
+								{{/usersInRoom}}
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						{{#isUserHost}}
+				 			<button type="button" id = "moveCloseRoom" class="btn btn-md">Close Room</button> 
+						{{/isUserHost}}
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/youtube.js"></script>
+	</body>
+</html>
