@@ -69,37 +69,62 @@ app.get('/room/:roomCode', function(request, response) {
             throw error;
         }
 
-        // filter results for usernames
-        let usersInRoom = results.map(function(row) { 
-            return { 
-                username: row['username'] 
-            }; 
-        });
-        // filter results for songs in queue, order based on rank in queue
-        let queue = results.map(function(row) {
-            return {
-                position: row['rank_in_queue'],
-                songID: row['youtube_id'],
-                songName: 'Another One'
+        // user just created a room
+        if(results.length === 0) {
+            let sql = 'SELECT room_name FROM rooms WHERE room_code=?';
+            connection.query(sql, roomCode, function (error, results, fields) {
+                let roomName = results[0].room_name;
+                let roomOwner = request.session.passport.user;
+                let isUserRoomOwner = true;
+                let usersInRoom = [{ 
+                    username: roomOwner
+                }];
+                let queue = [{
+                    songID: 'tG35R8F2j8k'
+                }];
+                roomData = {
+                    isUserHost: isUserRoomOwner,
+                    roomName: roomName,
+                    roomCode: roomCode,
+                    usersInRoom: usersInRoom,
+                    queue: queue
+                }
+                response.render('the_room', roomData);
+            });
+        } else {
+            // filter results for usernames
+            let usersInRoom = results.map(function(row) { 
+                return { 
+                    username: row['username'] 
+                }; 
+            });
+            // filter results for songs in queue, order based on rank in queue
+            let queue = results.map(function(row) {
+                return {
+                    position: row['rank_in_queue'],
+                    songID: row['youtube_id'],
+                    songName: 'Another One'
 
+                }
+            }).sort(function(i, j) {
+                return i.rank_in_queue < j.rank_in_queue
+            });
+
+            let roomName = results[0].room_name;
+            let roomOwner = results[0].room_owner_name;
+            let isUserRoomOwner = (roomOwner === request.session.passport.user);
+            roomData = {
+                isUserHost: isUserRoomOwner,
+                roomName: roomName,
+                roomCode: roomCode,
+                currentSongID: 'tG35R8F2j8k',
+                usersInRoom: usersInRoom,
+                queue: queue
             }
-        }).sort(function(i, j) {
-            return i.rank_in_queue < j.rank_in_queue
-        });
-
-        let roomName = results[0].room_name;
-        let roomOwner = results[0].room_owner_name;
-        let isUserRoomOwner = (roomOwner === request.session.passport.user);
-        roomData = {
-            isUserHost: isUserRoomOwner,
-            roomName: roomName,
-            roomCode: roomCode,
-            currentSongID: 'tG35R8F2j8k',
-            usersInRoom: usersInRoom,
-            queue: queue
+            response.render('the_room', roomData);
         }
-        response.render('the_room', roomData);
     });
+
     wss.on('connection', function(websocket, request) {
         websocket.on('message', function(message) {
             let sql = `SELECT users.username, users.user_id, music.youtube_id, music.rank_in_queue 
@@ -127,6 +152,7 @@ app.get('/room/:roomCode', function(request, response) {
                     usersInRoom: usersInRoom,
                     queue: queue
                 }
+                console.log(roomData)
                 websocket.send(JSON.stringify(roomData));
             });
         });
@@ -155,29 +181,23 @@ app.post('/rooms/create', function(request, response) {
     if ((roomName.length <= 15 && roomName.length > 2)|| roomName === "SaturdaysAreForTheBoys"){
         //generates random 5 digit code that cannot be shorter than 5 digits
         let roomCode = Math.floor(Math.random()*89999 + 10000);
-        let sql = 'SELECT room_code FROM rooms WHERE room_code=?';
-        connection.query(sql, roomCode, function(error, results, fields) {
-            if (results[0]) {
-                roomCode = Math.floor(Math.random()*89999 + 10000);
-                connection.query(sql, roomCode, function(error, results, fields) {
-                    if(!results[0]) {
-                        let SQL = 'INSERT INTO rooms(room_name, room_code, created_at, room_owner_name) VALUES (?, ?, ?, ?)';
-                        connection.query(SQL, [roomName, roomCode, new Date(), request.session.passport.user], function (error, results, fields) {
-                            if (error){throw error;}
-                            response.redirect('/room/' + roomCode);
-                        });
-                    }
-                })
-            } else {
-                let SQL = 'INSERT INTO rooms(room_name, room_code, created_at, room_owner_name) VALUES (?, ?, ?, ?)';
-                connection.query(SQL, [roomName, roomCode, new Date(), request.session.passport.user], function (error, results, fields) {
-                    if (error) {
+            let SQL = 'INSERT INTO rooms (room_name, room_code, created_at, room_owner_name) VALUES (?, ?, ?, ?); ';
+            connection.query(SQL, [roomName, roomCode, new Date(), request.session.passport.user], function (error, results, fields) {
+                if (error) {
+                    throw error;
+                }
+                let sql2 = 'UPDATE users SET current_room=? WHERE username=?';
+                connection.query(sql2, [roomCode, request.session.passport.user], function(error, results, fields) {
+                    if(error) {
                         throw error;
                     }
-                        response.redirect('/room/' + roomCode);
-                    })
-            }
-        });
+                    let id = 'tG35R8F2j8k';
+                    let sql3 = 'INSERT INTO music (youtube_id, room_code, rank_in_queue) VALUES (?, ?, ?)';
+                    connection.query(sql3, [id, roomCode, 1], function(error, results, fields) {
+                        response.redirect('/room/' + roomCode)
+                    });     
+                })
+            })
     }
 });
     // @TODO: create a row in the rooms table in db for new room -> then send user to room page
@@ -188,7 +208,15 @@ app.post('/rooms/join', function(request, response) {
     let SQL = 'SELECT room_code FROM rooms WHERE room_code=?';
     connection.query(SQL, roomJoinCode, function (error, results, fields){
         if (error) {throw error;}
-        if (results[0]) {response.redirect('/room/' + roomJoinCode)}
+        if (results[0]) {
+            let sql2 = 'UPDATE users SET current_room=? WHERE username=?';
+            connection.query(sql2, [roomJoinCode, request.session.passport.user], function(error, results, fields) {
+                if(!error) {
+                    response.redirect('/room/' + roomJoinCode)
+                }
+            })
+            // response.redirect('/room/' + roomJoinCode)
+        }
         else {response.redirect("/rooms?status=noRoom")}
     })
     // @TODO: send user to that room
