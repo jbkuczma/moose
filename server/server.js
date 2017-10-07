@@ -45,7 +45,6 @@ app.get('/login', function(request, response) {
 
 // serve page to create a new room or join an existing room
 app.get('/rooms', function(request, response) {
-    console.log(session)
     response.sendFile(path.join(__dirname + '/../www/html/create_room.html'));
 });
 
@@ -54,12 +53,39 @@ app.get('/room/:roomCode', function(request, response) {
     // @TODO: retrieve room info from db (room code, currently playing song, songs in queue, etc.)
     
     // beginning to get data for specific room from database
+    /**
+     * possible sql query
+     * username - users currently in room
+     */
     let roomCode = request.params.roomCode;
-    let sql = 'SELECT room_name, room_owner_name FROM rooms WHERE room_code=?';
+    // let sql = 'SELECT room_name, room_owner_name FROM rooms WHERE room_code=?';
+    let sql = `SELECT rooms.room_name, rooms.room_owner_name, users.username, users.user_id, music.youtube_id, music.rank_in_queue 
+               FROM rooms 
+               INNER JOIN users ON users.current_room=rooms.room_code 
+               INNER JOIN music ON music.room_code=rooms.room_code AND rooms.room_code=?`;
     connection.query(sql, roomCode, function (error, results, fields) {
         if(error) {
             throw error;
         }
+
+        // filter results for usernames
+        let usersInRoom = results.map(function(row) { 
+            return { 
+                username: row['username'] 
+            }; 
+        });
+        // filter results for songs in queue, order based on rank in queue
+        let queue = results.map(function(row) {
+            return {
+                position: row['rank_in_queue'],
+                songID: row['youtube_id'],
+                songName: 'Another One'
+
+            }
+        }).sort(function(i, j) {
+            return i.rank_in_queue < j.rank_in_queue
+        });
+
         let roomName = results[0].room_name;
         let roomOwner = results[0].room_owner_name;
         let isUserRoomOwner = (roomOwner === request.session.passport.user);
@@ -68,36 +94,9 @@ app.get('/room/:roomCode', function(request, response) {
             roomName: roomName,
             roomCode: roomCode,
             currentSongName: '3005 - Childish Gambino',
-            currenSongID: 'tG35R8F2j8k',
-            usersInRoom: [
-                {
-                    username: 'Dean'
-                },
-                {
-                    username: 'James'
-                },
-                {
-                    username: 'RJ'
-                }
-            ],
-            queue: [
-                {
-                    songID: 'test1',
-                    songName: 'Major key'
-                },
-                {
-                    songID: 'test2',
-                    songName: 'Another one'
-                },
-                {
-                    songID: 'test3',
-                    songName: 'Bless up'
-                },
-                {
-                    songID: 'test4',
-                    songName: 'Moose'
-                },
-            ]
+            currentSongID: 'tG35R8F2j8k',
+            usersInRoom: usersInRoom,
+            queue: queue
         }
         response.render('the_room', roomData);
     });
@@ -112,6 +111,7 @@ app.post('/account/login', auth.authenticate('login', {
     failureFlash: false
 }));
 
+// create an account 
 app.post('/account/create', auth.authenticate('create-account', {
     successRedirect: '/rooms',
     failureRedirect: '/login?status=failedCreateAccount',
