@@ -14,12 +14,18 @@ body{
 	background-color: #FFFFFF;
 	text-align: center;
 	width: 100%;
-	border-radius: 2px;
-	padding: 1px;
+	border-radius: 3px;
+	padding: 3px;
 }
 
 .songResultButton:hover{
 	background-color: #eeeeee;
+}
+
+#moveSearch{
+	background-color: #FFFFFF;
+	text-align: center;
+	width: 100%;
 }
 
 .text-center{
@@ -44,7 +50,7 @@ body{
 	color: #ffffff;
 }
 
-#moveSearch, #moveCloseRoom{
+#moveCloseRoom{
 	width: 100%;
 	background-color: #FC890F;
 	color: #ffffff;
