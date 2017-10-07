@@ -85,17 +85,18 @@ app.post('/rooms/create', function(request, response) {
                         });
                     }
                 })
+            } else {
+                let SQL = 'INSERT INTO rooms(room_name, room_code, created_at, room_owner_name) VALUES (?, ?, ?, ?)';
+                connection.query(SQL, [roomName, roomCode, new Date(), request.session.passport.user], function (error, results, fields) {
+                    if (error) {
+                        throw error;
+                    }
+                        response.redirect('/room/' + roomCode);
+                    })
             }
-        else {
-        let SQL = 'INSERT INTO rooms(room_name, room_code, created_at, room_owner_name) VALUES (?, ?, ?, ?)';
-        connection.query(SQL, [roomName, roomCode, new Date(), request.session.passport.user], function (error, results, fields) {
-            if (error) {
-                throw error;
-            }
-            response.redirect('/room/' + roomCode);
-            })
-        }
-    });
+        });
+    }
+});
     // @TODO: create a row in the rooms table in db for new room -> then send user to room page
 
 // join an existing room via room code
