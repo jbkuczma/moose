@@ -123,37 +123,6 @@ app.get('/room/:roomCode', function(request, response) {
             }
             response.render('the_room', roomData);
         }
-
-        // // filter results for usernames
-        // let usersInRoom = results.map(function(row) { 
-        //     return { 
-        //         username: row['username'] 
-        //     }; 
-        // });
-        // // filter results for songs in queue, order based on rank in queue
-        // let queue = results.map(function(row) {
-        //     return {
-        //         position: row['rank_in_queue'],
-        //         songID: row['youtube_id'],
-        //         songName: 'Another One'
-
-        //     }
-        // }).sort(function(i, j) {
-        //     return i.rank_in_queue < j.rank_in_queue
-        // });
-
-        // let roomName = results[0].room_name;
-        // let roomOwner = results[0].room_owner_name;
-        // let isUserRoomOwner = (roomOwner === request.session.passport.user);
-        // roomData = {
-        //     isUserHost: isUserRoomOwner,
-        //     roomName: roomName,
-        //     roomCode: roomCode,
-        //     currentSongID: 'tG35R8F2j8k',
-        //     usersInRoom: usersInRoom,
-        //     queue: queue
-        // }
-        // response.render('the_room', roomData);
     });
 
     wss.on('connection', function(websocket, request) {
