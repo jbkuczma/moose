@@ -188,7 +188,15 @@ app.post('/rooms/join', function(request, response) {
     let SQL = 'SELECT room_code FROM rooms WHERE room_code=?';
     connection.query(SQL, roomJoinCode, function (error, results, fields){
         if (error) {throw error;}
-        if (results[0]) {response.redirect('/room/' + roomJoinCode)}
+        if (results[0]) {
+            let sql2 = 'UPDATE users SET current_room=? WHERE username=?';
+            connection.query(sql2, [roomJoinCode, request.session.passport.user], function(error, results, fields) {
+                if(!error) {
+                    response.redirect('/room/' + roomJoinCode)
+                }
+            })
+            // response.redirect('/room/' + roomJoinCode)
+        }
         else {response.redirect("/rooms?status=noRoom")}
     })
     // @TODO: send user to that room
