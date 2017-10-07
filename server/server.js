@@ -6,6 +6,7 @@ const session = require('express-session');
 const os = require('os');
 const auth = require('./auth');
 const app = express();
+const my_key = require("./keys");
 
 // create connection to database
 let connection = mysql.createConnection({
@@ -115,27 +116,38 @@ app.post('/rooms/join', function(request, response) {
 app.post('/room/:roomCode/search', function(request, response) {
     let searchQuery = request.body.query;
     // @TODO: send query to YouTube API, parse results, send results to frontend to show
+    let options = {
+        maxResults: 1,
+        key: my_key
+    };
+
+    search(searchQuery, options, function (err, results) {
+        if (err) return console.log(err);
+        // @TODO: need to find a way to make it so onclick will query the result, not just searching
+        console.log("search q" + searchQuery);
+        console.dir(results);
+    });
 });
 
 
 // starts Moose on port 3000
-app.listen(3000, '0.0.0.0', function() {
-    let userIP = ipAddress()
-    console.log('Moose started on port 3000');
-    console.log(`Visit localhost:3000/login or ${userIP}:3000/login`);
-});
+    app.listen(3000, '0.0.0.0', function () {
+        let userIP = ipAddress()
+        console.log('Moose started on port 3000');
+        console.log(`Visit localhost:3000/login or ${userIP}:3000/login`);
+    });
 
 
-/**
- * helper to get user's ip address
- */
-let ipAddress = function() {
-    let interfaces = os.networkInterfaces()
-    let address = '';
-    for(let dev in interfaces) {
-        interfaces[dev].filter(function(details) {
-            details.family === 'IPv4' && details.internal === false ? address = details.address : undefined;
-        });
+    /**
+     * helper to get user's ip address
+     */
+    let ipAddress = function () {
+        let interfaces = os.networkInterfaces()
+        let address = '';
+        for (let dev in interfaces) {
+            interfaces[dev].filter(function (details) {
+                details.family === 'IPv4' && details.internal === false ? address = details.address : undefined;
+            });
+        }
+        return address;
     }
-    return address;
-}
