@@ -50,14 +50,14 @@
 						<div class="card-header">
 							<h1 class="card-title"> Search Results </h1>
 						</div>
-						<div class="card-body">
+						<div class="card-body" id="songArray">
 							<h5 class="card-user">THIS IS WHERE SEARCHED SONGS WILL BE</h5>
 						</div>
 					</div>
 					<form class="form">
 						<div class="form-group">
 							<input type="Search" class="form-control" name="query" id="Search" placeholder="Search for music">
- +							<input type="submit" value="Search" />
+                            <button type="button" id = "moveSeach" class="btn btn-default" onclick="loadSearch()"> Search </button>
 						</div>
 					</form>
 				</div>
@@ -104,6 +104,7 @@
 			function updatePage(json) {
 				var queue = json['queue'];
 				var users = json['usersInRoom'];
+				var songs = json['songSearch']
 
 				var queueEl = document.getElementById('songQueue');
 				var userListEl = document.getElementById('users');
@@ -130,7 +131,30 @@
 					el.textContent = username;
 					userListEl.append(el);
 				}
+                for(var k = 0; k < users.length; k++) {
+                    var username = users[j]['username'];
+                    var el = document.createElement('h5');
+                    el.classList.add("card-user");
+                    el.textContent = username;
+                    userListEl.append(el);
+                }
 			}
+			    function loadSearch(){
+			        fetch('/room/:roomCode/search').then(function (response) {
+                        return response.json();
+
+                    }).then(function (json) {
+                        let array = document.getElementById("songArray");
+                        for(let n=0; n < 10; n++) {
+                            var song = document.createElement('button');
+                            song.setAttribute('text', json[n].title);
+                            array.append(song);
+                        }
+
+                    }).catch(function(error){
+			            console.log(error);
+                    });
+                }
 		</script>
 	</body>
 </html>

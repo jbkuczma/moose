@@ -55,7 +55,28 @@ app.get('/login', function(request, response) {
 app.get('/rooms', function(request, response) {
     response.sendFile(path.join(__dirname + '/../www/html/create_room.html'));
 });
+app.get('/room/:roomCode/search', function(request,response){
+    let searchQuery = request.body.query;
+    // @TODO: send query to YouTube API, parse results, send results to frontend to show
+    let options = {
+        maxResults: 10,
+        key: my_key.my_key
+    };
 
+    search(searchQuery, options, function (err, results) {
+        if (err) return console.log(err);
+        // @TODO: need to find a way to make it so onclick will query the result, not just searching
+        console.dir(results);
+        let song_array = [10];
+        for (let i = 0; i < results.length; i++){
+            let currID = results[i]["id"];
+            let currTitle = results[i]["title"];
+            song_array[i]  = {id: currID, title: currTitle};
+            console.log(song_array);
+        }
+        response.send({data : song_array});
+    });
+});
 // serve a specific room page
 app.get('/room/:roomCode', function(request, response) {
     let roomCode = request.params.roomCode;
