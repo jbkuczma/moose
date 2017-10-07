@@ -128,7 +128,7 @@ app.post('/room/:roomCode/search', function(request, response) {
         console.dir(results);
         let song_array = [10];
         for (let i = 0; i < results.length; i++){
-            let currID = results[i]["id"]
+            let currID = results[i]["id"];
             let currTitle = results[i]["title"];
             song_array[i]  = {id: currID, title: currTitle};
         console.log(song_array);
