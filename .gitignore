@@ -59,4 +59,4 @@ typings/
 
 .idea/rm
 
-keys.js
+server/keys.js
