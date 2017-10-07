@@ -7,6 +7,7 @@ const os = require('os');
 const auth = require('./auth');
 const app = express();
 const my_key = require("./keys");
+const search = require('youtube-search');
 
 // create connection to database
 let connection = mysql.createConnection({
@@ -118,7 +119,7 @@ app.post('/room/:roomCode/search', function(request, response) {
     // @TODO: send query to YouTube API, parse results, send results to frontend to show
     let options = {
         maxResults: 1,
-        key: my_key
+        key: my_key.my_key
     };
 
     search(searchQuery, options, function (err, results) {
