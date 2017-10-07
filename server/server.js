@@ -71,11 +71,21 @@ app.post('/rooms/create', function(request, response) {
     let roomName = request.body.room_name;
     if ((roomName.length <= 15 && roomName.length > 2)|| roomName === "SaturdaysAreForTheBoys"){
         //generates random 5 digit code that cannot be shorter than 5 digits
-        let random_numb = Math.floor(Math.random()*89999 + 10000);
+        let roomCode=0;
+        while(true){
+            let random_numb = Math.floor(Math.random()*89999 + 10000);
+            let sql = 'SELECT room_code FROM rooms WHERE room_code=?';
+            connection.query(sql, random_numb, function(error, results, fields) {
+                if (!results[0]) {
+                    roomCode = random_numb;
+                    break;
+                    }
+            })
+        }/*else {*/
         let SQL = 'INSERT INTO rooms(room_name, room_code, created_at, room_owner_name) VALUES (?, ?, ?, ?)';
-        connection.query(SQL, [roomName, random_numb, new Date(), request.session.passport.user], function (error, results, fields) {
+        connection.query(SQL, [roomName, roomCode, new Date(), request.session.passport.user], function (error, results, fields) {
             if (error){throw error;}
-            response.redirect('/room/' + random_numb);
+            response.redirect('/room/' + roomCode);
         });
     }
     // @TODO: create a row in the rooms table in db for new room -> then send user to room page
