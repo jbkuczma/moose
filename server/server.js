@@ -118,15 +118,21 @@ app.post('/room/:roomCode/search', function(request, response) {
     let searchQuery = request.body.query;
     // @TODO: send query to YouTube API, parse results, send results to frontend to show
     let options = {
-        maxResults: 1,
+        maxResults: 10,
         key: my_key.my_key
     };
 
     search(searchQuery, options, function (err, results) {
         if (err) return console.log(err);
         // @TODO: need to find a way to make it so onclick will query the result, not just searching
-        console.log("search q" + searchQuery);
         console.dir(results);
+        let song_array = [10];
+        for (let i = 0; i < results.length; i++){
+            let currID = results[i]["id"]["videoId"];
+            let currTitle = results[i]["snippet"]["title"];
+            song_array[i]  = {id: currID, title: currTitle};
+        console.log(song_array);
+        }
     });
 });
 
