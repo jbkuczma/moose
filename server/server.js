@@ -6,7 +6,13 @@ const session = require('express-session');
 const exphbs  = require('express-handlebars');
 const os = require('os');
 const auth = require('./auth');
+const WebSocket = require('ws');
+
 const app = express();
+
+// setup the websocket
+// const wss = new WebSocket.Server(app);
+const wss = new WebSocket.Server({ port: 3030 });
 
 // create connection to database
 let connection = mysql.createConnection({
@@ -50,13 +56,6 @@ app.get('/rooms', function(request, response) {
 
 // serve a specific room page
 app.get('/room/:roomCode', function(request, response) {
-    // @TODO: retrieve room info from db (room code, currently playing song, songs in queue, etc.)
-    
-    // beginning to get data for specific room from database
-    /**
-     * possible sql query
-     * username - users currently in room
-     */
     let roomCode = request.params.roomCode;
     // let sql = 'SELECT room_name, room_owner_name FROM rooms WHERE room_code=?';
     let sql = `SELECT rooms.room_name, rooms.room_owner_name, users.username, users.user_id, music.youtube_id, music.rank_in_queue 
@@ -93,12 +92,42 @@ app.get('/room/:roomCode', function(request, response) {
             isUserHost: isUserRoomOwner,
             roomName: roomName,
             roomCode: roomCode,
-            currentSongName: '3005 - Childish Gambino',
             currentSongID: 'tG35R8F2j8k',
             usersInRoom: usersInRoom,
             queue: queue
         }
         response.render('the_room', roomData);
+    });
+    wss.on('connection', function(websocket, request) {
+        websocket.on('message', function(message) {
+            let sql = `SELECT users.username, users.user_id, music.youtube_id, music.rank_in_queue 
+            FROM users
+            INNER JOIN music ON music.room_code=users.current_room AND music.room_code=?`;
+            connection.query(sql, roomCode, function (error, results, fields) {
+                // filter results for usernames
+                let usersInRoom = results.map(function(row) { 
+                    return { 
+                        username: row['username'] 
+                    }; 
+                });
+                // filter results for songs in queue, order based on rank in queue
+                let queue = results.map(function(row) {
+                    return {
+                        position: row['rank_in_queue'],
+                        songID: row['youtube_id'],
+                        songName: 'Another One'
+        
+                    }
+                }).sort(function(i, j) {
+                    return i.rank_in_queue < j.rank_in_queue
+                });
+                let roomData = {
+                    usersInRoom: usersInRoom,
+                    queue: queue
+                }
+                websocket.send(JSON.stringify(roomData));
+            });
+        });
     });
 });
 
