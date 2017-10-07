@@ -10,13 +10,18 @@ body{
 	background-color: #eeeeee;
 }
 
-.songResultButton #moveSearch{
+.songResultButton{
 	text-align: center;
 	width: 100%;
 }
 
 .songResultButton:hover{
 	background-color: #eeeeee;
+}
+
+#moveSearch{
+	text-align: center;
+	width: 100%;
 }
 
 .text-center{
