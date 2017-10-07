@@ -72,13 +72,14 @@ app.post('/rooms/create', function(request, response) {
     if ((roomName.length <= 15 && roomName.length > 2)|| roomName === "SaturdaysAreForTheBoys"){
         //generates random 5 digit code that cannot be shorter than 5 digits
         let roomCode=0;
-        while(true){
+        let sameRoomCode=true;
+        while(sameRoomCode){
             let random_numb = Math.floor(Math.random()*89999 + 10000);
             let sql = 'SELECT room_code FROM rooms WHERE room_code=?';
             connection.query(sql, random_numb, function(error, results, fields) {
                 if (!results[0]) {
                     roomCode = random_numb;
-                    break;
+                    sameRoomCode=false;
                     }
             })
         }/*else {*/
