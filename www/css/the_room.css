@@ -13,6 +13,7 @@ body{
 .songResultButton{
 	text-align: center;
 	width: 100%;
+	border-radius: 2px;
 }
 
 .songResultButton:hover{
