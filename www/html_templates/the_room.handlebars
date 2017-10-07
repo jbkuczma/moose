@@ -51,7 +51,7 @@
 							<h1 class="card-title"> Search Results </h1>
 						</div>
 						<div class="card-body" id="songArray">
-							<h5 class="card-user">THIS IS WHERE SEARCHED SONGS WILL BE</h5>
+							
 						</div>
 					</div>
 					<form class="form">
@@ -164,9 +164,25 @@
                 }
 
 				function addSongToQueue(event) {
-					// TODO
-					console.log(event)
-					console.log('call route on backend to add to database')
+					var songID = event.target.id;
+					var roomCode = window.location.href.split('/')[4]; // might change
+					var position = document.getElementById('songQueue').childElementCount + 1;
+					var name = event.target.textContent;
+					var data = {
+						song: songID,
+						room: roomCode,
+						position: position,
+						name: name
+					};
+					fetch('/song/add', {
+						method: 'POST',
+						body: JSON.stringify(data),
+						headers: {
+							"Content-Type": "application/json"
+						}
+					}).then(function(response) {
+						console.log('ok')
+					});
 				}
 		</script>
 	</body>

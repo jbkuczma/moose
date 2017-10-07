@@ -74,11 +74,24 @@ app.get('/room/:roomCode/search', function(request,response){
         response.send({data: song_array});
     });
 });
+
+app.post('/song/add', function(request, response) {
+    let name = request.body.name;
+    let song = request.body.song;
+    let roomCode = request.body.room;
+    let positionInQueue = request.body.position;
+    let sql = 'INSERT INTO music (youtube_id, room_code, rank_in_queue, song_name) VALUES (?, ?, ?, ?); ';
+    connection.query(sql, [song, roomCode, positionInQueue, name], function (error, results, fields) {
+        if (error) {
+            throw error;
+        }
+    });
+});
 // serve a specific room page
 app.get('/room/:roomCode', function(request, response) {
     let roomCode = request.params.roomCode;
     // let sql = 'SELECT room_name, room_owner_name FROM rooms WHERE room_code=?';
-    let sql = `SELECT rooms.room_name, rooms.room_owner_name, users.username, users.user_id, music.youtube_id, music.rank_in_queue 
+    let sql = `SELECT rooms.room_name, rooms.room_owner_name, users.username, users.user_id, music.youtube_id, music.rank_in_queue, music.song_name 
                FROM rooms 
                INNER JOIN users ON users.current_room=rooms.room_code 
                INNER JOIN music ON music.room_code=rooms.room_code AND rooms.room_code=?`;
@@ -98,7 +111,9 @@ app.get('/room/:roomCode', function(request, response) {
                     username: roomOwner
                 }];
                 let queue = [{
-                    songID: 'tG35R8F2j8k'
+                    position: 1,
+                    songID: 'tG35R8F2j8k',
+                    songName: 'Redbone'
                 }];
                 roomData = {
                     isUserHost: isUserRoomOwner,
@@ -121,7 +136,7 @@ app.get('/room/:roomCode', function(request, response) {
                 return {
                     position: row['rank_in_queue'],
                     songID: row['youtube_id'],
-                    songName: 'Another One'
+                    songName: row['song_name']
 
                 }
             }).sort(function(i, j) {
@@ -145,7 +160,7 @@ app.get('/room/:roomCode', function(request, response) {
 
     wss.on('connection', function(websocket, request) {
         websocket.on('message', function(message) {
-            let sql = `SELECT users.username, users.user_id, music.youtube_id, music.rank_in_queue 
+            let sql = `SELECT users.username, users.user_id, music.youtube_id, music.rank_in_queue, music.song_name
             FROM users
             INNER JOIN music ON music.room_code=users.current_room AND music.room_code=?`;
             connection.query(sql, roomCode, function (error, results, fields) {
@@ -160,7 +175,7 @@ app.get('/room/:roomCode', function(request, response) {
                     return {
                         position: row['rank_in_queue'],
                         songID: row['youtube_id'],
-                        songName: 'Another One'
+                        songName: row['song_name']
         
                     }
                 }).sort(function(i, j) {
@@ -170,7 +185,6 @@ app.get('/room/:roomCode', function(request, response) {
                     usersInRoom: usersInRoom,
                     queue: queue
                 }
-                console.log(roomData)
                 websocket.send(JSON.stringify(roomData));
             });
         });
