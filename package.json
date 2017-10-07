@@ -29,6 +29,7 @@
     "mysql": "^2.14.1",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
+    "youtube-search": "^1.0.10",
     "ws": "^3.2.0"
   }
 }
