@@ -102,11 +102,14 @@
 			}
 			ws.onmessage = function(data) {
 				var json = JSON.parse(data.data);
+				console.log(json)
 				updatePage(json);	
 			}
+
 			setInterval(function() {
 				ws.send('pls send');
 			}, 5000);
+			
 
 			function updatePage(json) {
 				var queue = json['queue'];
@@ -120,7 +123,7 @@
 				userListEl.innerHTML = '';
 				queueEl.innerHTML = '';
 
-				for(var i = 1; i < queue.length; i++) {
+				for(var i = 0; i < queue.length; i++) {
 					var songID = queue[i]['songID'];
 					var songName = queue[i]['songName'];
 					var el = document.createElement('li');
@@ -138,13 +141,6 @@
 					el.textContent = username;
 					userListEl.append(el);
 				}
-                for(var k = 0; k < users.length; k++) {
-                    var username = users[j]['username'];
-                    var el = document.createElement('h5');
-                    el.classList.add("card-user");
-                    el.textContent = username;
-                    userListEl.append(el);
-                }
 			}
 			    function loadSearch(){
 					let array = document.getElementById("songArray");

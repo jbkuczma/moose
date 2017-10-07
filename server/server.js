@@ -7,6 +7,7 @@ const exphbs  = require('express-handlebars');
 const os = require('os');
 const auth = require('./auth');
 const WebSocket = require('ws');
+const _ = require('underscore');
 
 const app = express();
 const my_key = require("./keys");
@@ -87,6 +88,17 @@ app.post('/song/add', function(request, response) {
         }
     });
 });
+
+app.post('/song/remove', function(request, response) {
+    let song = request.body.song;
+    let roomCode = request.body.room;
+    let sql = 'DELETE FROM music WHERE youtube_id=? AND room_code=?';
+    connection.query(sql, [song, roomCode], function (error, results, fields) {
+        if (error) {
+            throw error;
+        }
+    });
+});
 // serve a specific room page
 app.get('/room/:roomCode', function(request, response) {
     let roomCode = request.params.roomCode;
@@ -111,9 +123,9 @@ app.get('/room/:roomCode', function(request, response) {
                     username: roomOwner
                 }];
                 let queue = [{
-                    position: 1,
-                    songID: 'tG35R8F2j8k',
-                    songName: 'Redbone'
+                    position: 0,
+                    songID: 'OHU80BsabxQ',
+                    songName: '10 seconds'
                 }];
                 roomData = {
                     isUserHost: isUserRoomOwner,
@@ -150,7 +162,8 @@ app.get('/room/:roomCode', function(request, response) {
                 isUserHost: isUserRoomOwner,
                 roomName: roomName,
                 roomCode: roomCode,
-                currentSongID: 'tG35R8F2j8k',
+                // currentSongID: 'tG35R8F2j8k',
+                // currentSong: 'OHU80BsabxQ',
                 usersInRoom: usersInRoom,
                 queue: queue
             }
@@ -170,6 +183,10 @@ app.get('/room/:roomCode', function(request, response) {
                         username: row['username'] 
                     }; 
                 });
+                usersInRoom = _.uniq(usersInRoom, function(v) { 
+                    return v.username;
+                });
+
                 // filter results for songs in queue, order based on rank in queue
                 let queue = results.map(function(row) {
                     return {
@@ -180,6 +197,10 @@ app.get('/room/:roomCode', function(request, response) {
                     }
                 }).sort(function(i, j) {
                     return i.rank_in_queue < j.rank_in_queue
+                });
+
+                queue = _.uniq(queue, function(v) {
+                    return v.songID
                 });
                 let roomData = {
                     usersInRoom: usersInRoom,
@@ -223,9 +244,10 @@ app.post('/rooms/create', function(request, response) {
                     if(error) {
                         throw error;
                     }
-                    let id = 'tG35R8F2j8k';
-                    let sql3 = 'INSERT INTO music (youtube_id, room_code, rank_in_queue) VALUES (?, ?, ?)';
-                    connection.query(sql3, [id, roomCode, 1], function(error, results, fields) {
+                    // let id = 'tG35R8F2j8k';
+                    let id = 'OHU80BsabxQ'
+                    let sql3 = 'INSERT INTO music (youtube_id, room_code, rank_in_queue, song_name) VALUES (?, ?, ?, ?)';
+                    connection.query(sql3, [id, roomCode, 0, '10 seconds'], function(error, results, fields) {
                         response.redirect('/room/' + roomCode)
                     });     
                 })
@@ -266,13 +288,11 @@ app.post('/room/:roomCode/search', function(request, response) {
     search(searchQuery, options, function (err, results) {
         if (err) return console.log(err);
         // @TODO: need to find a way to make it so onclick will query the result, not just searching
-        console.dir(results);
         let song_array = [10];
         for (let i = 0; i < results.length; i++){
             let currID = results[i]["id"];
             let currTitle = results[i]["title"];
             song_array[i]  = {id: currID, title: currTitle};
-        console.log(song_array);
         }
     });
 });

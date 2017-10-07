@@ -5,12 +5,24 @@
  /**
  * get the first li element in the song
  */
-function getSongIDFromQueue() {
-    var queue = document.getElementsByClassName('songInQueue');
-    var songID = queue[0].id;
-    document.getElementById('songQueue').removeChild(queue[0]); // remove song from queue
-    return songID;
-}
+// function getSongIDFromQueue() {
+//     var queue = document.getElementsByClassName('songInQueue');
+//     var songID = queue[0].id;
+//     var roomCode = window.location.href.split('/')[4]; // might change
+//     var data = {
+//         song: newID,
+//         room: roomCode
+//     };
+//     fetch('/song/remove', {
+//         method: 'POST',
+//         body: JSON.stringify(data),
+//         headers: {
+//             "Content-Type": "application/json"
+//         }
+//     }).then(function(response) {
+//         document.getElementById('songQueue').removeChild(queue[0]); // remove song from queue
+//     });
+// }
 
 /* YOUTUBE IFRAME */
 // 2. This code loads the IFrame Player API code asynchronously.
@@ -28,7 +40,7 @@ function onYouTubeIframeAPIReady() {
     player = new YT.Player('player', {
     height: '390',
     width: '640',
-    videoId: getSongIDFromQueue(),
+    videoId: document.getElementsByClassName('songInQueue')[0].id,
     playerVars: {
         showinfo: 0,
         controls: 0,
@@ -52,18 +64,29 @@ function onPlayerReady(event) {
 //    the player should play for six seconds and then stop.
 var done = false;
 function onPlayerStateChange(event) {
-    // if (event.data == YT.PlayerState.PLAYING && !done) {
-    //   setTimeout(stopVideo, 6000);
-    //   done = true;
-    // }  
     if (event.data == YT.PlayerState.ENDED) { // or 0
-        var newID = getSongIDFromQueue();
-        if (newID) {
-            player.loadVideoById(newID); 
-        } else {
-            player.loadVideoById('dQw4w9WgXcQ'); // don't let your queue be empty 
-        }
-        
+        var queue = document.getElementsByClassName('songInQueue');
+        console.log(queue)
+        var songID = queue[0].id;
+        console.log(songID)
+        var roomCode = window.location.href.split('/')[4]; // might change
+        var data = {
+            song: songID,
+            room: roomCode
+        };
+        fetch('/song/remove', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(function(response) {
+            document.getElementById('songQueue').removeChild(queue[0]); // remove song from queue
+            player.loadVideoById(songID);
+        })
+        .catch(function(error) {
+            player.loadVideoById('dQw4w9WgXcQ'); 
+        });        
     }
 }
 function stopVideo() {
