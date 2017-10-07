@@ -2,6 +2,17 @@
  * JS file to control the YouTube iframe
  */
 
+ /**
+ * get the first li element in the song
+ */
+function getSongIDFromQueue() {
+    var queue = document.getElementsByClassName('songInQueue');
+    var songID = queue[0].id;
+    document.getElementById('songQueue').removeChild(queue[0]); // remove song from queue
+    return songID;
+}
+
+/* YOUTUBE IFRAME */
 // 2. This code loads the IFrame Player API code asynchronously.
 var tag = document.createElement('script');
 
@@ -12,11 +23,12 @@ firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 // 3. This function creates an <iframe> (and YouTube player)
 //    after the API code downloads.
 var player;
+
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('player', {
     height: '390',
     width: '640',
-    videoId: 'tG35R8F2j8k',
+    videoId: getSongIDFromQueue(),
     playerVars: {
         showinfo: 0,
         controls: 0,
@@ -28,7 +40,6 @@ function onYouTubeIframeAPIReady() {
         'onStateChange': onPlayerStateChange
     }
     });
-console.log(player);
 }
 
 // 4. The API will call this function when the video player is ready.
@@ -46,7 +57,13 @@ function onPlayerStateChange(event) {
     //   done = true;
     // }  
     if (event.data == YT.PlayerState.ENDED) { // or 0
-    player.loadVideoById('Kp7eSUU9oy8') // change to redbone
+        var newID = getSongIDFromQueue();
+        if (newID) {
+            player.loadVideoById(newID); 
+        } else {
+            player.loadVideoById('dQw4w9WgXcQ'); // don't let your queue be empty 
+        }
+        
     }
 }
 function stopVideo() {
