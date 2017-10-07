@@ -10,6 +10,15 @@ body{
 	background-color: #eeeeee;
 }
 
+.songResultButton #moveSearch{
+	text-align: center;
+	width: 100%;
+}
+
+.songResultButton:hover{
+	background-color: #eeeeee;
+}
+
 .text-center{
 	color: #0DDDE8;
 }
@@ -38,3 +47,4 @@ body{
 	color: #ffffff;
 	cursor: pointer;
 }
+
