@@ -95,6 +95,11 @@ input{
 	right: 0;
 }
 
+#errorText{
+	bottom: 30%;
+	left: 50%;
+}
+
 
 body{
 	background: linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)), url('../img/true.jpg');
@@ -102,6 +107,7 @@ body{
 	background-position: center;
 	background-size: cover;
 	background-repeat: no-repeat;
+	left: 50%;
 }
 
 #headers1{
@@ -113,6 +119,11 @@ body{
 #headers2{
 	text-align: center;
 	color: #efefef;
+}
+
+#errorText{
+	position: relative;
+	text-align: center;
 }
 
 
