@@ -140,14 +140,21 @@
                 }
 			}
 			    function loadSearch(){
-			        fetch('/room/:roomCode/search').then(function (response) {
+					let array = document.getElementById("songArray");
+					var query = document.getElementById('Search').value;
+					var roomCode = window.location.href.split('/')[4]; // might change
+					array.innerHTML = '';
+			        fetch('/room/' + roomCode + '/search/?query=' + query).then(function (response) {
                         return response.json();
 
                     }).then(function (json) {
-                        let array = document.getElementById("songArray");
                         for(let n=0; n < 10; n++) {
                             var song = document.createElement('button');
-                            song.setAttribute('text', json[n].title);
+                            {{!-- song.setAttribute('text', json.data[n].title); --}}
+                            song.textContent = json.data[n].title;	
+							song.setAttribute('id', json.data[n].id);
+							song.classList.add('songResultButton');	
+							song.addEventListener('click', addSongToQueue);				
                             array.append(song);
                         }
 
@@ -155,6 +162,12 @@
 			            console.log(error);
                     });
                 }
+
+				function addSongToQueue(event) {
+					// TODO
+					console.log(event)
+					console.log('call route on backend to add to database')
+				}
 		</script>
 	</body>
 </html>
