@@ -10,6 +10,24 @@ body{
 	background-color: #eeeeee;
 }
 
+.songResultButton{
+	background-color: #FFFFFF;
+	text-align: center;
+	width: 100%;
+	border-radius: 3px;
+	padding: 3px;
+}
+
+.songResultButton:hover{
+	background-color: #eeeeee;
+}
+
+#moveSearch{
+	background-color: #FFFFFF;
+	text-align: center;
+	width: 100%;
+}
+
 .text-center{
 	color: #0DDDE8;
 }
@@ -32,9 +50,10 @@ body{
 	color: #ffffff;
 }
 
-#moveSearch, #moveCloseRoom{
+#moveCloseRoom{
 	width: 100%;
 	background-color: #FC890F;
 	color: #ffffff;
 	cursor: pointer;
 }
+

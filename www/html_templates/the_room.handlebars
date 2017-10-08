@@ -21,9 +21,11 @@
 			<div class="row justify-content-center">
 				 <div id="roomInfoHeader" class="d-flex flex-column"> 
 					<div class="row">
+						{{#if isUserHost}}
 						<div id="player" class="embed-responsive-item">			
 
 						</div> 
+						{{/if}}
 					</div> 
 					<div class="row d-flex justify-content-center">
 						{{!-- <span id = "currentSong" id="{{currenSongID}}"> {{currentSongName}} </span> --}}
@@ -33,6 +35,7 @@
 			<div class="row">
 				<div class="col-md-4">
 				<div class="card">
+						{{#if isUserHost}}
 						<div class="card-header">
 							<h1 class="card-title"> Up Next </h1>
 						</div>
@@ -43,6 +46,7 @@
 								{{/queue}}
 							</ul>
 						</div>
+						{{/if}}
 					</div>	
 				</div>
 				<div class="col-md-4">
@@ -50,19 +54,20 @@
 						<div class="card-header">
 							<h1 class="card-title"> Search Results </h1>
 						</div>
-						<div class="card-body">
-							<h5 class="card-user">THIS IS WHERE SEARCHED SONGS WILL BE</h5>
+						<div class="card-body" id="songArray">
+							
 						</div>
 					</div>
 					<form class="form">
 						<div class="form-group">
 							<input type="Search" class="form-control" name="query" id="Search" placeholder="Search for music">
- +							<input type="submit" value="Search" />
+                            <button type="button" id = "moveSearch" class="btn btn-default" onclick="loadSearch()"> Search </button>
 						</div>
 					</form>
 				</div>
 				<div class="col-md-4">
 					<div class="row d-flex justify-content-center">
+						{{#if isUserHost}}
 						<div class="card">
 							<div class="card-header">
 								<h1 class="card-title"> Users currently in Room </h1>
@@ -75,16 +80,24 @@
 								{{/usersInRoom}}
 							</div>
 						</div>
+						{{/if}}
 					</div>
 					<div class="row">
-						{{#isUserHost}}
-				 			<button type="button" id = "moveCloseRoom" class="btn btn-md">Close Room</button> 
-						{{/isUserHost}}
+						{{#if isUserHost}}
+				 			<button type="button" id = "moveCloseRoom" class="btn btn-md" onclick="closeRoom()">Close Room</button> 
+						{{/if}}
 					</div>
 				</div>
 			</div>
 		</div>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script>
+			$(document).keypress(function(event){
+				if (event.which == '13') {
+					event.preventDefault();
+				}
+			});
+		</script>
 		<script src="../js/bootstrap.min.js"></script>
 		<script src="../js/youtube.js"></script>
 		<script type="text/javascript">
@@ -95,15 +108,19 @@
 			}
 			ws.onmessage = function(data) {
 				var json = JSON.parse(data.data);
+				console.log(json)
 				updatePage(json);	
 			}
+
 			setInterval(function() {
 				ws.send('pls send');
 			}, 5000);
+			
 
 			function updatePage(json) {
 				var queue = json['queue'];
 				var users = json['usersInRoom'];
+				var songs = json['songSearch']
 
 				var queueEl = document.getElementById('songQueue');
 				var userListEl = document.getElementById('users');
@@ -112,7 +129,7 @@
 				userListEl.innerHTML = '';
 				queueEl.innerHTML = '';
 
-				for(var i = 1; i < queue.length; i++) {
+				for(var i = 0; i < queue.length; i++) {
 					var songID = queue[i]['songID'];
 					var songName = queue[i]['songName'];
 					var el = document.createElement('li');
@@ -131,6 +148,77 @@
 					userListEl.append(el);
 				}
 			}
+			    function loadSearch(){
+					let array = document.getElementById("songArray");
+					var query = document.getElementById('Search').value;
+					var roomCode = window.location.href.split('/')[4]; // might change
+					array.innerHTML = '';
+			        fetch('/room/' + roomCode + '/search/?query=' + query).then(function (response) {
+                        return response.json();
+
+                    }).then(function (json) {
+                        for(let n=0; n < 10; n++) {
+                            var song = document.createElement('button');
+                            {{!-- song.setAttribute('text', json.data[n].title); --}}
+                            song.textContent = json.data[n].title;	
+							song.setAttribute('id', json.data[n].id);
+							song.classList.add('songResultButton');	
+							song.addEventListener('click', addSongToQueue);				
+                            array.append(song);
+                        }
+
+                    }).catch(function(error){
+			            console.log(error);
+                    });
+                }
+
+				function addSongToQueue(event) {
+					var songID = event.target.id;
+					var roomCode = window.location.href.split('/')[4]; // might change
+					var name = event.target.textContent;
+					var data = {
+						song: songID,
+						room: roomCode,
+						{{!-- position: song_position, --}}
+						name: name
+					};
+					fetch('/song/add', {
+						method: 'POST',
+						body: JSON.stringify(data),
+						headers: {
+							"Content-Type": "application/json"
+						}
+					}).then(function(response) {
+						console.log('ok')
+					});
+				}
+
+				function ISODateString(d){
+					function pad(n){return n<10 ? '0'+n : n}
+					return d.getUTCFullYear()+'-'
+						+ pad(d.getUTCMonth()+1)+'-'
+						+ pad(d.getUTCDate()) +' '
+						+ pad(d.getUTCHours())+':'
+						+ pad(d.getUTCMinutes())+':'
+						+ pad(d.getUTCSeconds())
+				}
+
+				function closeRoom() {
+					var roomCode = window.location.href.split('/')[4]; // might change
+					var data = {
+						room: roomCode,
+					};
+					window.location = ('/rooms');
+					fetch('/room/delete', {
+						method: 'POST',
+						body: JSON.stringify(data),
+						headers: {
+							"Content-Type": "application/json"
+						}
+					}).then(function(response) {
+						console.log('deleted');
+					});
+				}
 		</script>
 	</body>
 </html>
