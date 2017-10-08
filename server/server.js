@@ -282,6 +282,18 @@ app.post('/room/:roomCode/search', function(request, response) {
     });
 });
 
+app.post('/room/delete', function(request, response) {
+    let roomCode = request.body.room;
+    let SQL = 'DELETE FROM music WHERE music.room_code=?';
+    let SQL2 = 'DELETE FROM rooms WHERE rooms.room_code=?';
+    connection.query(SQL, roomCode, function (error, results, fields){
+        if (error) {throw error;}
+        connection.query(SQL2, roomCode, function (error, results, fields){
+            if (error) {throw error;}
+        });
+    });
+});
+
 
 // starts Moose on port 3000
     app.listen(3000, '0.0.0.0', function () {
