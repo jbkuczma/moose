@@ -67,9 +67,22 @@ var done = false;
 function onPlayerStateChange(event) {
     if (event.data == 0) {
         var queue = document.getElementsByClassName('songInQueue');
+        var roomCode = window.location.href.split('/')[4]; // might change
+        if(queue[0] === undefined) {
+            var data = {
+                room: roomCode,
+            };
+            window.location = ('/rooms');
+            fetch('/room/delete', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+        }
         var songID = queue[0].id;
         player.loadVideoById(songID);
-        var roomCode = window.location.href.split('/')[4]; // might change
         var data = {
             song: songID,
             room: roomCode
@@ -83,10 +96,7 @@ function onPlayerStateChange(event) {
         }).then(function(response) {
             var remove = document.getElementById(songID);
             document.getElementById('songQueue').removeChild(remove); // remove song from queue
-        })
-        // .catch(function(error) {
-        //     player.loadVideoById('dQw4w9WgXcQ'); 
-        // });        
+        })       
     }
 }
 function stopVideo() {
