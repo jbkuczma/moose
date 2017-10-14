@@ -6,7 +6,7 @@ const session = require('express-session');
 const exphbs  = require('express-handlebars');
 const os = require('os');
 const auth = require('./auth');
-const WebSocket = require('ws');
+// const WebSocket = require('ws');
 const _ = require('underscore');
 
 const app = express();
@@ -15,7 +15,7 @@ const search = require('youtube-search');
 
 // setup the websocket
 // const wss = new WebSocket.Server(app);
-const wss = new WebSocket.Server({ port: 3030 });
+// const wss = new WebSocket.Server({ port: 3030 });
 
 // create connection to database
 let connection = mysql.createConnection({
@@ -114,7 +114,7 @@ app.get('/room/:roomCode', function(request, response) {
         if(!results[0]) {
             let sql = 'SELECT room_name FROM rooms WHERE room_code=?';
             connection.query(sql, roomCode, function (error, results, fields) {
-                if(error || !result[0]) { respone.redirect('/rooms'); }
+                if(error || !results[0]) { respone.redirect('/rooms'); }
                 roomData = {
                     isUserHost: request.session.passport.user,
                     roomName: results[0].room_name,
@@ -158,45 +158,45 @@ app.get('/room/:roomCode', function(request, response) {
             response.render('the_room', roomData);
         }
     });
+});
 
-    wss.on('connection', function(websocket, request) {
-        websocket.on('message', function(message) {
-            let sql = `SELECT users.username, users.user_id, music.youtube_id, music.rank_in_queue, music.song_name
+// update queue and users in room
+app.get('/room/:roomCode/update', function(request, response) {
+    let roomCode = request.params.roomCode;
+    let sql = `SELECT users.username, users.user_id, music.youtube_id, music.rank_in_queue, music.song_name
             FROM users
             INNER JOIN music ON music.room_code=users.current_room AND music.room_code=?`;
-            connection.query(sql, roomCode, function (error, results, fields) {
-                // filter results for usernames
-                let usersInRoom = results.map(function(row) { 
-                    return { 
-                        username: row['username'] 
-                    }; 
-                });
-                usersInRoom = _.uniq(usersInRoom, function(v) { 
-                    return v.username;
-                });
-
-                // filter results for songs in queue, order based on rank in queue
-                let queue = results.map(function(row) {
-                    return {
-                        position: row['rank_in_queue'],
-                        songID: row['youtube_id'],
-                        songName: row['song_name']
-        
-                    }
-                }).sort(function(i, j) {
-                    return i.position > j.position
-                });
-
-                queue = _.uniq(queue, function(v) {
-                    return v.songID
-                });
-                let roomData = {
-                    usersInRoom: usersInRoom,
-                    queue: queue
-                }
-                websocket.send(JSON.stringify(roomData));
-            });
+    connection.query(sql, roomCode, function (error, results, fields) {
+        // filter results for usernames
+        let usersInRoom = results.map(function(row) { 
+            return { 
+                username: row['username'] 
+            }; 
         });
+        usersInRoom = _.uniq(usersInRoom, function(v) { 
+            return v.username;
+        });
+
+        // filter results for songs in queue, order based on rank in queue
+        let queue = results.map(function(row) {
+            return {
+                position: row['rank_in_queue'],
+                songID: row['youtube_id'],
+                songName: row['song_name']
+
+            }
+        }).sort(function(i, j) {
+            return i.position > j.position
+        });
+
+        queue = _.uniq(queue, function(v) {
+            return v.songID
+        });
+        let roomData = {
+            usersInRoom: usersInRoom,
+            queue: queue
+        }
+        response.json({'data': roomData});
     });
 });
 
