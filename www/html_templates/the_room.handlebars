@@ -9,6 +9,9 @@
 		<link href="../css/bootstrap.css" rel="stylesheet">
 		<link href="../css/bootstrap-grid.css" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="../css/the_room.css">
+		{{#if isUserHost}}
+			<script src="../js/room_host.js"></script>
+		{{/if}}
 	</head>
 	<body>
 		<div class="container">
@@ -100,125 +103,6 @@
 		</script>
 		<script src="../js/bootstrap.min.js"></script>
 		<script src="../js/youtube.js"></script>
-		<script type="text/javascript">
-			// connect user to websocket
-			var ws = new WebSocket('ws://localhost:3030');
-			ws.onopen = function() {
-				
-			}
-			ws.onmessage = function(data) {
-				var json = JSON.parse(data.data);
-				console.log(json)
-				updatePage(json);	
-			}
-
-			setInterval(function() {
-				ws.send('pls send');
-			}, 5000);
-			
-
-			function updatePage(json) {
-				var queue = json['queue'];
-				var users = json['usersInRoom'];
-				var songs = json['songSearch']
-
-				var queueEl = document.getElementById('songQueue');
-				var userListEl = document.getElementById('users');
-
-				// clear them
-				userListEl.innerHTML = '';
-				queueEl.innerHTML = '';
-
-				for(var i = 0; i < queue.length; i++) {
-					var songID = queue[i]['songID'];
-					var songName = queue[i]['songName'];
-					var el = document.createElement('li');
-					el.classList.add('list-group-item');
-					el.classList.add('songInQueue');
-					el.id = songID;
-					el.textContent = songName;
-					queueEl.append(el);
-				}
-
-				for(var j = 0; j < users.length; j++) {
-					var username = users[j]['username'];
-					var el = document.createElement('h5');
-					el.classList.add("card-user");
-					el.textContent = username;
-					userListEl.append(el);
-				}
-			}
-			    function loadSearch(){
-					let array = document.getElementById("songArray");
-					var query = document.getElementById('Search').value;
-					var roomCode = window.location.href.split('/')[4]; // might change
-					array.innerHTML = '';
-			        fetch('/room/' + roomCode + '/search/?query=' + query).then(function (response) {
-                        return response.json();
-
-                    }).then(function (json) {
-                        for(let n=0; n < 10; n++) {
-                            var song = document.createElement('button');
-                            {{!-- song.setAttribute('text', json.data[n].title); --}}
-                            song.textContent = json.data[n].title;	
-							song.setAttribute('id', json.data[n].id);
-							song.classList.add('songResultButton');	
-							song.addEventListener('click', addSongToQueue);				
-                            array.append(song);
-                        }
-
-                    }).catch(function(error){
-			            console.log(error);
-                    });
-                }
-
-				function addSongToQueue(event) {
-					var songID = event.target.id;
-					var roomCode = window.location.href.split('/')[4]; // might change
-					var name = event.target.textContent;
-					var data = {
-						song: songID,
-						room: roomCode,
-						{{!-- position: song_position, --}}
-						name: name
-					};
-					fetch('/song/add', {
-						method: 'POST',
-						body: JSON.stringify(data),
-						headers: {
-							"Content-Type": "application/json"
-						}
-					}).then(function(response) {
-						console.log('ok')
-					});
-				}
-
-				function ISODateString(d){
-					function pad(n){return n<10 ? '0'+n : n}
-					return d.getUTCFullYear()+'-'
-						+ pad(d.getUTCMonth()+1)+'-'
-						+ pad(d.getUTCDate()) +' '
-						+ pad(d.getUTCHours())+':'
-						+ pad(d.getUTCMinutes())+':'
-						+ pad(d.getUTCSeconds())
-				}
-
-				function closeRoom() {
-					var roomCode = window.location.href.split('/')[4]; // might change
-					var data = {
-						room: roomCode,
-					};
-					window.location = ('/rooms');
-					fetch('/room/delete', {
-						method: 'POST',
-						body: JSON.stringify(data),
-						headers: {
-							"Content-Type": "application/json"
-						}
-					}).then(function(response) {
-						console.log('deleted');
-					});
-				}
-		</script>
+		<script src="../js/room.js"></script>
 	</body>
 </html>
