@@ -48,6 +48,11 @@ app.use(auth.session());
 /*** GET REQUESTS ***/
 
 // serve login page
+app.get('/', function(request, response) {
+    response.sendFile(path.join(__dirname + '/../www/html/index.html'));
+});
+
+// serve login page
 app.get('/login', function(request, response) {
     response.sendFile(path.join(__dirname + '/../www/html/login.html'));
 });
