@@ -29,11 +29,3 @@ body {
     color: #fff;
     text-transform: uppercase;
 }
-
-/* only let smartphones be able to scroll */
-@media (min-width: 990px) {
-    body {
-        overflow-x: hidden;
-        overflow-y: hidden;
-    }
-}
