@@ -79,7 +79,7 @@ passport.use('create-account', new LocalStrategy({ passReqToCallback: true, fail
             });
         }
         else{
-            response.redirect("/login?status=Password_Confirm_Incorrect")
+            return done(null, false);
         }
     }
 ));

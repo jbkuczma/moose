@@ -22,7 +22,7 @@ function showCreateAccountForm() {
         errorText.style.display = 'block';
     }
     else if (status === 'failedCreateAccount') {
-        errorText.textContent = 'Account creation failed. The username you selected is taken.';
+        errorText.textContent = 'Account creation failed.';
         errorText.style.display = 'block';
     }
 })();
