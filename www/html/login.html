@@ -26,5 +26,17 @@
             </form>
         </div>
         <script src="../js/login.js"> </script>
+
+         <script type="text/javascript">
+             var errorText = document.getElementById('errorText');
+             errorText.style.display = 'none';
+             var hasError = window.location.search;
+             var status = hasError.split('=')[1];
+             if(status === 'Password_Confirm_Incorrect') {
+                 errorText.textContent = 'Passwords Do Not Match';
+                 errorText.style.display = 'block';
+                 errorText.style.color = '#f44336'
+             }
+         </script>
     </body>
 </html>

@@ -251,7 +251,6 @@ app.post('/rooms/create', function(request, response) {
     }
     else{
         response.redirect("/rooms?status=InvalidRoom")
-
     }
 });
 
