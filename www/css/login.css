@@ -1,0 +1,96 @@
+ html {
+    overflow: hidden; /* prevent over-scrolling of page */
+    height: 100%;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+} 
+
+body {
+    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('../img/concert.jpg');
+    background-position:center top; 
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+    height: 100%;
+    overflow: auto; /* prevent over-scrolling of page */
+}
+
+.form_container {
+    position: relative;
+    height: 100vh;
+}
+
+ .login_form {
+    width: 50%;
+    top: 50%;
+    left: 50%;
+    -moz-transform: translateY(-50%) translateX(-50%);
+    -webkit-transform: translateY(-50%) translateX(-50%);
+    -o-transform: translateY(-50%) translateX(-50%);
+    transform: translateY(-50%) translateX(-50%);
+    position: absolute;
+    text-align: center;
+} 
+
+.login_form_input {
+    display: block;
+    text-align: center;
+    width: 100%;
+    
+    border: none;
+    background: transparent;
+    background-color: rgba(51, 51, 51, 0.7);
+    color: #EFEFEF;
+
+    padding: 14px 16px;
+    margin-bottom: 10px;
+}
+
+#login_form_button {
+    background-color: rgba(13,221,232, 0.9);
+    color: #EFEFEF;
+}
+#login_form_button:hover {
+    border: none;
+    background-color: #0DDDE8;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+.login_form_input:focus {
+    outline: none;
+    border: 2px #555555 solid;
+}
+
+#confirm_password_input {
+    display: none;
+}
+
+#createAccountButton {
+    border: none;
+    padding: 8px 10px;
+    background-color: #09969E;
+    color: #EFEFEF;
+}
+#createAccountButton:hover {
+    cursor: pointer;
+}
+
+#form_text {
+    width: 100%;
+    display: block;
+    color: #EFEFEF;
+    margin-bottom: 5px;
+}
+
+#form_text h1, img {
+    display: inline-block;  
+    margin: 0 auto;  
+}
+#moose_logo_img {
+    max-width: 75px;
+    max-height: 75px;
+}
+
+#errorText {
+    color: #f44336;
+    display: none;
+}

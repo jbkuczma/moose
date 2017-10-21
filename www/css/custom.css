@@ -1,0 +1,31 @@
+/* your styles go here */
+body {
+    /* background-color: #f5f5f5; */
+    background-color: #0c0c0c;    
+}
+
+.moose_container {
+    background-color: #0c0c0c;
+}
+
+.headText {
+    color: #a1a1a1;
+}
+
+.center-text {
+    text-align: center;
+}
+
+#getStarted {
+    width: 100%;
+}
+
+.copyrights {
+    font-size: 12px;
+    color: #585858;
+}
+
+#getStarted {
+    color: #fff;
+    text-transform: uppercase;
+}

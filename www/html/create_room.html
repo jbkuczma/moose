@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+	<title>Create a Room</title>
+	<link rel="stylesheet" type="text/css" href="../css/create_room.css" />
+	<meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<div class="form_container">
+		<h1 id= "headers1">Create or join a room</h1>
+		<h3 id = "headers2">and start streaming music effortlessly</h3>
+		<form class = "create_room" action="/rooms/create" method="post">
+			<input type="text" name="room_name" placeholder="Room Name" class="create_room_form" id="room_name_id" />
+			<input type="submit" id="Create_Room" value="Create Room" />
+		</form>
+	 	<form class="join" action="/rooms/join" method="post">
+	 		<input type="text" name="join_code" placeholder="Enter Join Code" class="create_room_form" id="join_code_id" />
+			<input type="submit" id="Join_Code" value= "Join Room" />
+	 	</form>
+		<div>
+			<span id="errorText"></span>
+		</div>
+	</div>
+			<script type="text/javascript">
+				var errorText = document.getElementById('errorText');
+				errorText.style.display = 'none';
+				var hasError = window.location.search;
+				var status = hasError.split('=')[1];
+				if(status === 'noRoom') {
+                    errorText.textContent = 'Room join code invalid';
+                    errorText.style.display = 'block';
+                    errorText.style.color = '#f44336'
+                }
+                if(status === 'InvalidRoom') {
+                    errorText.textContent = 'Invalid Room Name';
+                    errorText.style.display = 'block';
+                    errorText.style.color = '#f44336'
+                }
+			</script>
+</body>
+</html>
+

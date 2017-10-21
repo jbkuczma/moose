@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title> Room - Moose </title>
+		<!-- Bootstrap -->
+		<link href="../css/bootstrap.css" rel="stylesheet">
+		<link href="../css/bootstrap-grid.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../css/the_room.css">
+		{{#if isUserHost}}
+			<script src="../js/room_host.js"></script>
+		{{/if}}
+	</head>
+	<body>
+		<div class="container">
+			<div class="row d-flex justify-content-center">
+				<p id="roomNameHeader"> {{roomName}} </p>
+			</div>
+			<div class="row d-flex justify-content-center">
+				<p id="roomCodeHeader"> Room code: {{roomCode}} </p>
+			</div>
+			<div class="row justify-content-center">
+				 <div id="roomInfoHeader" class="d-flex flex-column"> 
+					<div class="row">
+						{{#if isUserHost}}
+						<div id="player" class="embed-responsive-item">			
+
+						</div> 
+						{{/if}}
+					</div> 
+					<div class="row d-flex justify-content-center">
+						{{!-- <span id = "currentSong" id="{{currenSongID}}"> {{currentSongName}} </span> --}}
+					 </div> 
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+				<div class="card">
+						{{#if isUserHost}}
+						<div class="card-header">
+							<h1 class="card-title"> Up Next </h1>
+						</div>
+						<div class="card-body">
+							<ul class="list-group" id="songQueue">
+								{{#queue}}
+									<li class="list-group-item songInQueue" id="{{songID}}"> {{songName}} </li>
+								{{/queue}}
+							</ul>
+						</div>
+						{{/if}}
+					</div>	
+				</div>
+				<div class="col-md-4">
+					<div class="card">
+						<div class="card-header">
+							<h1 class="card-title"> Search Results </h1>
+						</div>
+						<div class="card-body" id="songArray">
+							
+						</div>
+					</div>
+					<form class="form">
+						<div class="form-group">
+							<input type="Search" class="form-control" name="query" id="Search" placeholder="Search for music">
+                            <button type="button" id = "moveSearch" class="btn btn-default" onclick="loadSearch()"> Search </button>
+						</div>
+					</form>
+				</div>
+				<div class="col-md-4">
+					<div class="row d-flex justify-content-center">
+						{{#if isUserHost}}
+						<div class="card">
+							<div class="card-header">
+								<h1 class="card-title"> Users currently in Room </h1>
+							</div>
+							<div class="card-body" id="users">
+								{{#usersInRoom}} 
+								<h5 class="card-user">
+									{{username}}
+								</h5>
+								{{/usersInRoom}}
+							</div>
+						</div>
+						{{/if}}
+					</div>
+					<div class="row">
+						{{#if isUserHost}}
+				 			<button type="button" id = "moveCloseRoom" class="btn btn-md" onclick="closeRoom()">Close Room</button> 
+						{{/if}}
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="overlay"></div>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script>
+			$(document).keypress(function(event){
+				if (event.which == '13') {
+					event.preventDefault();
+				}
+			});
+		</script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/youtube.js"></script>
+		<script src="../js/room.js"></script>
+	</body>
+</html>
