@@ -6,16 +6,11 @@ const session = require('express-session');
 const exphbs  = require('express-handlebars');
 const os = require('os');
 const auth = require('./auth');
-// const WebSocket = require('ws');
 const _ = require('underscore');
 
 const app = express();
 const my_key = require("./keys");
 const search = require('youtube-search');
-
-// setup the websocket
-// const wss = new WebSocket.Server(app);
-// const wss = new WebSocket.Server({ port: 3030 });
 
 // create connection to database
 let connection = mysql.createConnection({
@@ -54,6 +49,10 @@ app.get('/login', function(request, response) {
 
 // serve page to create a new room or join an existing room
 app.get('/rooms', function(request, response) {
+    if(!request.session.passport) {
+        response.redirect('/login');
+        return;
+    }
     response.sendFile(path.join(__dirname + '/../www/html/create_room.html'));
 });
 app.get('/room/:roomCode/search', function(request,response){
@@ -100,6 +99,10 @@ app.post('/song/remove', function(request, response) {
 });
 // serve a specific room page
 app.get('/room/:roomCode', function(request, response) {
+    if(!request.session.passport) {
+        response.redirect('/login');
+        return;
+    }
     let roomCode = request.params.roomCode;
     // let sql = 'SELECT room_name, room_owner_name FROM rooms WHERE room_code=?';
     let sql = `SELECT rooms.room_name, rooms.room_owner_name, users.username, users.user_id, music.youtube_id, music.rank_in_queue, music.song_name 
@@ -145,13 +148,10 @@ app.get('/room/:roomCode', function(request, response) {
             let roomName = results[0].room_name;
             let roomOwner = results[0].room_owner_name;
             let isUserRoomOwner = (roomOwner === request.session.passport.user);
-            // let isUserRoomOwner = false;
             roomData = {
                 isUserHost: isUserRoomOwner,
                 roomName: roomName,
                 roomCode: roomCode,
-                // currentSongID: 'tG35R8F2j8k',
-                // currentSong: 'OHU80BsabxQ',
                 usersInRoom: usersInRoom,
                 queue: queue
             }
@@ -218,6 +218,10 @@ app.post('/account/create', auth.authenticate('create-account', {
 
 // create a room
 app.post('/rooms/create', function(request, response) {
+    if(!request.session.passport) {
+        response.redirect('/login');
+        return;
+    }
     let roomName = request.body.room_name;
     if ((roomName.length <= 15 && roomName.length > 2)|| roomName === "SaturdaysAreForTheBoys"){
         //generates random 5 digit code that cannot be shorter than 5 digits
@@ -241,14 +245,19 @@ app.post('/rooms/create', function(request, response) {
             })
     }
 });
-    // @TODO: create a row in the rooms table in db for new room -> then send user to room page
 
 // join an existing room via room code
 app.post('/rooms/join', function(request, response) {
+    if(!request.session.passport) {
+        response.redirect('/login');
+        return;
+    }
     let roomJoinCode = request.body.join_code;
     let SQL = 'SELECT room_code FROM rooms WHERE room_code=?';
     connection.query(SQL, roomJoinCode, function (error, results, fields){
-        if (error) { respone.redirect('/rooms'); }
+        if (error) {
+            respone.redirect('/rooms');
+        }
         if (results[0]) {
             let sql2 = 'UPDATE users SET current_room=? WHERE username=?';
             connection.query(sql2, [roomJoinCode, request.session.passport.user], function(error, results, fields) {
@@ -266,15 +275,15 @@ app.post('/rooms/join', function(request, response) {
 // search YouTube api using query input
 app.post('/room/:roomCode/search', function(request, response) {
     let searchQuery = request.body.query;
-    // @TODO: send query to YouTube API, parse results, send results to frontend to show
     let options = {
         maxResults: 10,
         key: my_key.my_key
     };
 
     search(searchQuery, options, function (err, results) {
-        if (err) { respone.redirect('/rooms'); }
-        // @TODO: need to find a way to make it so onclick will query the result, not just searching
+        if (err) {
+            respone.redirect('/rooms');
+        }
         let song_array = [10];
         for (let i = 0; i < results.length; i++){
             let currID = results[i]["id"];
@@ -289,32 +298,36 @@ app.post('/room/delete', function(request, response) {
     let SQL = 'DELETE FROM music WHERE music.room_code=?';
     let SQL2 = 'DELETE FROM rooms WHERE rooms.room_code=?';
     connection.query(SQL, roomCode, function (error, results, fields){
-        if (error) { respone.redirect('/rooms'); }
+        if (error) {
+            respone.redirect('/rooms');
+        }
         connection.query(SQL2, roomCode, function (error, results, fields){
-            if (error) {throw error;}
+            if (error) {
+                throw error;
+            }
         });
     });
 });
 
 
 // starts Moose on port 3000
-    app.listen(3000, '0.0.0.0', function () {
-        let userIP = ipAddress()
-        console.log('Moose started on port 3000');
-        console.log(`Visit localhost:3000/login or ${userIP}:3000/login`);
-    });
+app.listen(3000, '0.0.0.0', function () {
+    let userIP = ipAddress()
+    console.log('Moose started on port 3000');
+    console.log(`Visit localhost:3000/login or ${userIP}:3000/login`);
+});
 
 
-    /**
-     * helper to get user's ip address
-     */
-    let ipAddress = function () {
-        let interfaces = os.networkInterfaces()
-        let address = '';
-        for (let dev in interfaces) {
-            interfaces[dev].filter(function (details) {
-                details.family === 'IPv4' && details.internal === false ? address = details.address : undefined;
-            });
-        }
-        return address;
+/**
+ * helper to get user's ip address
+ */
+let ipAddress = function () {
+    let interfaces = os.networkInterfaces()
+    let address = '';
+    for (let dev in interfaces) {
+        interfaces[dev].filter(function (details) {
+            details.family === 'IPv4' && details.internal === false ? address = details.address : undefined;
+        });
     }
+    return address;
+}
