@@ -1,5 +1,5 @@
 # moose
-UB CSE 442 project. Moose is a web app that allows users to stream music together effortlessly.
+UB CSE 442 project. [Moose](moosemusic.net/) is a web app that allows users to stream music together effortlessly.
 
 A user can create a room, becoming that room's host, and share the associated room code with their friends. Once in a room, a user can search for and add music to the room's queue which is played through the host's device. A room will close if there is no song being played and the queue is empty or if the host chooses to close the room. 
 
