@@ -20,7 +20,7 @@ let connection = mysql.createConnection({
  * @param {String} inputString - string to test
  */
 function isValidInput(inputString) {
-    return inputString.match(/^[a-zA-Z0-9]{3,16}$/)[0]; // regex to limit username input string to letters and numbers and a max length of 16
+        return inputString.match(/^[a-zA-Z0-9]{3,16}$/);// regex to limit username input string to letters and numbers and a max length of 16
 }
 
 passport.use('login', new LocalStrategy({ failWithError: true },
@@ -57,7 +57,7 @@ passport.use('create-account', new LocalStrategy({ passReqToCallback: true, fail
             // query db to see if username exists
             let sql = 'SELECT username FROM users WHERE username=?';
             connection.query(sql, username1, function(error, results, fields) {
-                if(results[0]) {
+                if(results[0] || error) {
                     return done(null, false);
                 } else {
                     let hashedUser = hasher.saltAndHashPassword(password);
