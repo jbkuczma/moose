@@ -83,7 +83,6 @@ app.post('/song/add', function(request, response) {
     let name = request.body.name;
     let song = request.body.song;
     let roomCode = request.body.room;
-    // let positionInQueue = request.body.position;
     let sql = 'INSERT INTO music (youtube_id, room_code, song_name) VALUES (?, ?, ?); ';
     connection.query(sql, [song, roomCode, name], function (error, results, fields) {
         if (error) {
@@ -109,7 +108,6 @@ app.get('/room/:roomCode', function(request, response) {
         return;
     }
     let roomCode = request.params.roomCode;
-    // let sql = 'SELECT room_name, room_owner_name FROM rooms WHERE room_code=?';
     let sql = `SELECT rooms.room_name, rooms.room_owner_name, users.username, users.user_id, music.youtube_id, music.rank_in_queue, music.song_name 
                FROM rooms 
                INNER JOIN users ON users.current_room=rooms.room_code 
@@ -130,8 +128,7 @@ app.get('/room/:roomCode', function(request, response) {
                 }
                 response.render('the_room', roomData);
             });
-        } 
-        else {
+        } else {
             // filter results for usernames
             let usersInRoom = results.map(function(row) { 
                 return { 
@@ -147,7 +144,11 @@ app.get('/room/:roomCode', function(request, response) {
 
                 }
             }).sort(function(i, j) {
-                return i.rank_in_queue < j.rank_in_queue
+                return i.position - j.position
+            });
+
+            queue = _.uniq(queue, function(v) {
+                return v.songID
             });
 
             let roomName = results[0].room_name;
@@ -191,7 +192,7 @@ app.get('/room/:roomCode/update', function(request, response) {
 
             }
         }).sort(function(i, j) {
-            return i.position > j.position
+            return i.position - j.position
         });
 
         queue = _.uniq(queue, function(v) {
@@ -201,7 +202,9 @@ app.get('/room/:roomCode/update', function(request, response) {
             usersInRoom: usersInRoom,
             queue: queue
         }
-        response.json({'data': roomData});
+        response.json({
+            'data': roomData
+        });
     });
 });
 
