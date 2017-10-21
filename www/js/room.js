@@ -26,6 +26,10 @@ function loadSearch(){
 }
 
 function addSongToQueue(event) {
+    document.getElementById("overlay").style.display = "block";
+    window.setTimeout(function() {
+        document.getElementById("overlay").style.display = "none";
+    }, 5000);
     var songID = event.target.id;
     var roomCode = window.location.href.split('/')[4]; // might change
     var name = event.target.textContent;

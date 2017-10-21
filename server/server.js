@@ -86,7 +86,7 @@ app.post('/song/add', function(request, response) {
     let sql = 'INSERT INTO music (youtube_id, room_code, song_name) VALUES (?, ?, ?); ';
     connection.query(sql, [song, roomCode, name], function (error, results, fields) {
         if (error) {
-            respone.redirect('/rooms');
+            response.redirect('/rooms');
         }
     });
 });
@@ -97,7 +97,7 @@ app.post('/song/remove', function(request, response) {
     let sql = 'DELETE FROM music WHERE youtube_id=? AND room_code=?';
     connection.query(sql, [song, roomCode], function (error, results, fields) {
         if (error) {
-            respone.redirect('/rooms');
+            response.redirect('/rooms');
         }
     });
 });
@@ -114,13 +114,13 @@ app.get('/room/:roomCode', function(request, response) {
                INNER JOIN music ON music.room_code=rooms.room_code AND rooms.room_code=?`;
     connection.query(sql, roomCode, function (error, results, fields) {
         if(error) {
-            respone.redirect('/rooms');
+            response.redirect('/rooms');
         }
 
         if(!results[0]) {
             let sql = 'SELECT room_name FROM rooms WHERE room_code=?';
             connection.query(sql, roomCode, function (error, results, fields) {
-                if(error || !results[0]) { respone.redirect('/rooms'); }
+                if(error || !results[0]) { response.redirect('/rooms'); }
                 roomData = {
                     isUserHost: request.session.passport.user,
                     roomName: results[0].room_name,
@@ -264,7 +264,7 @@ app.post('/rooms/join', function(request, response) {
     let SQL = 'SELECT room_code FROM rooms WHERE room_code=?';
     connection.query(SQL, roomJoinCode, function (error, results, fields){
         if (error) {
-            respone.redirect('/rooms');
+            response.redirect('/rooms');
         }
         if (results[0]) {
             let sql2 = 'UPDATE users SET current_room=? WHERE username=?';
@@ -290,7 +290,7 @@ app.post('/room/:roomCode/search', function(request, response) {
 
     search(searchQuery, options, function (err, results) {
         if (err) {
-            respone.redirect('/rooms');
+            response.redirect('/rooms');
         }
         let song_array = [10];
         for (let i = 0; i < results.length; i++){
@@ -307,7 +307,7 @@ app.post('/room/delete', function(request, response) {
     let SQL2 = 'DELETE FROM rooms WHERE rooms.room_code=?';
     connection.query(SQL, roomCode, function (error, results, fields){
         if (error) {
-            respone.redirect('/rooms');
+            response.redirect('/rooms');
         }
         connection.query(SQL2, roomCode, function (error, results, fields){
             if (error) {
