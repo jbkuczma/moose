@@ -231,7 +231,7 @@ app.post('/rooms/create', function(request, response) {
         return;
     }
     let roomName = request.body.room_name;
-    if ((roomName.length <= 15 && roomName.length > 2)|| roomName === "SaturdaysAreForTheBoys"){
+    if ((roomName.match(/^[a-zA-Z0-9]{3,16}$/)[0]) || roomName === "SaturdaysAreForTheBoys"){
         //generates random 5 digit code that cannot be shorter than 5 digits
         let roomCode = Math.floor(Math.random()*89999 + 10000);
             let SQL = 'INSERT INTO rooms (room_name, room_code, created_at, room_owner_name) VALUES (?, ?, ?, ?); ';
@@ -251,6 +251,9 @@ app.post('/rooms/create', function(request, response) {
                     });     
                 })
             })
+    }
+    else{
+        response.redirect("/rooms?status=InvalidRoom")
     }
 });
 
