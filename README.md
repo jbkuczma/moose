@@ -60,4 +60,8 @@ You should see the following prompt:
 
 **Note**
 
-There will be a slight delay on the room host's screen from when a user joins a room to them showing up in the "Users in room" area. There will also be a slight delay when selecting a song and having it show up in the queue. Rapidly adding songs to the queue may cause server overload which will then need to be restarted, forcing everyone to have to login again - be generous. 
+There will be a slight delay on the room host's screen from when a user joins a room to them showing up in the "Users in room" area. There will also be a slight delay when selecting a song and having it show up in the queue. Rapidly adding songs to the queue may cause server overload which will then need to be restarted, forcing everyone to have to login again - be generous.
+
+**Commentary** (tbd)
+
+Cool project, guys. - Wendy
