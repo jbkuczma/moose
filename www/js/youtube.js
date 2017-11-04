@@ -41,18 +41,6 @@ function onYouTubeIframeAPIReady() {
         'onStateChange': onPlayerStateChange
     }
     });
-
-    // fetch('/song/remove', {
-    //     method: 'POST',
-    //     body: JSON.stringify(data),
-    //     headers: {
-    //         "Content-Type": "application/json"
-    //     }
-    // }).then(function(response) {
-    //     var remove = document.getElementById(songID);
-    //     document.getElementById('songQueue').removeChild(remove); // remove song from queue
-    //     console.log('removed')
-    // });
 }
 
 // 4. The API will call this function when the video player is ready.
