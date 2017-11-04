@@ -68,6 +68,33 @@
 						</div>
 					</form>
 				</div>
+
+
+
+
+
+                <div class="col-md-4">
+                    <div class="card">
+                        {{#if usersInRoom}}
+                        <div class="card-header">
+                            <h1 class="card-title"> Recently Played Songs </h1>
+                        </div>
+                        <div class="card-body"> </div>
+                            <ul class="list-group" id="previousSongs">
+                                    <li class="list-group-item songInQueue"> {{songName}} </li>
+                            </ul>
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
 				<div class="col-md-4">
 					<div class="row d-flex justify-content-center">
 						{{#if isUserHost}}
