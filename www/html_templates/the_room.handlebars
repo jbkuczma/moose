@@ -75,16 +75,16 @@
 
                 <div class="col-md-4">
                     <div class="card">
-                        {{#if usersInRoom}}
+                        {{#unless isUserHost}}
                         <div class="card-header">
-                            <h1 class="card-title"> Recently Played Songs </h1>
+                            <h1 class="card-title"> Previously Played Songs </h1>
                         </div>
                         <div class="card-body"> </div>
                             <ul class="list-group" id="previousSongs">
                                     <li class="list-group-item songInQueue"> {{songName}} </li>
                             </ul>
                         </div>
-                        {{/if}}
+                        {{/unless}}
                     </div>
                 </div>
 
