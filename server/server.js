@@ -64,6 +64,7 @@ app.get('/room/:roomCode/search', function(request,response){
     let searchQuery = request.query.query;
     let options = {
         maxResults: 10,
+        type: 'video',
         key: my_key.my_key
     };
 
@@ -73,6 +74,10 @@ app.get('/room/:roomCode/search', function(request,response){
         for (let i = 0; i < results.length; i++){
             let currID = results[i]["id"];
             let currTitle = results[i]["title"];
+            //another possible fix if the search result is a channel
+            // if (results[i]["id"]["kind"] === 'youtube#channel'){
+            //     continue
+            // }
             song_array[i]  = {id: currID, title: currTitle};
         }
         response.send({data: song_array});
