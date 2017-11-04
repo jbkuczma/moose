@@ -71,6 +71,21 @@ function onPlayerStateChange(event) {
         }
         var songID = queue[0].id;
         player.loadVideoById(songID);
+        // first add song to previously played, then remove from music
+        var data = {
+            songName: queue[0].textContent
+        };
+        var url = '/room/' + roomCode + '/previous';
+        fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(function(message) {
+            console.log('good')
+        });
+
         var data = {
             song: songID,
             room: roomCode
