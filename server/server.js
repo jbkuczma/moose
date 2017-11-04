@@ -64,6 +64,7 @@ app.get('/room/:roomCode/search', function(request,response){
     let searchQuery = request.query.query;
     let options = {
         maxResults: 10,
+        type: 'video',
         key: my_key.my_key
     };
 
