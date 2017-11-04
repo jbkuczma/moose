@@ -337,6 +337,7 @@ app.post('/room/delete', function(request, response) {
     let roomCode = request.body.room;
     let SQL = 'DELETE FROM music WHERE music.room_code=?';
     let SQL2 = 'DELETE FROM rooms WHERE rooms.room_code=?';
+    let SQL3 = 'DELETE FROM previous_music WHERE previous_music.room_code=?';
     connection.query(SQL, roomCode, function (error, results, fields){
         if (error) {
             response.redirect('/rooms');
@@ -345,6 +346,11 @@ app.post('/room/delete', function(request, response) {
             if (error) {
                 throw error;
             }
+            connection.query(SQL3, roomCode, function (error, results, fields){
+                if (error) {
+                    throw error;
+                }
+            });
         });
     });
 });
