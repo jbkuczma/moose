@@ -125,6 +125,9 @@ app.get('/room/:roomCode/previous', function(request, response) {
                     song: row['song_name']
                 };
             });
+            previousRoomMusic = _.uniq(previousRoomMusic, function(v) {
+                return v.song
+            });
             response.json({
                 'data': previousRoomMusic
             });

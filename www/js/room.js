@@ -73,4 +73,4 @@ function getPreviouslyPlayedMusic() {
 getPreviouslyPlayedMusic();
 setInterval(function() {
     getPreviouslyPlayedMusic();
-}, 30000);
+}, 5000);
