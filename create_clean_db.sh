@@ -39,9 +39,14 @@ mysql -u ${USER} -p << SQL
 		song_name TEXT NOT NULL,
 		PRIMARY KEY (rank_in_queue)
 	);
+	CREATE TABLE IF NOT EXISTS previous_music (
+		room_code VARCHAR(5) NOT NULL,
+		song_name TEXT NOT NULL
+	);
 	INSERT INTO users (username, password, salt, created_at, current_room) VALUES ('test.1', 'f6537d74a07a61d7a7524e4f5d4070a3fffcdf51c72c6ee22792fd21d76aca388c08abab492790f91879731c427b1653f91e484386b951b61e1783a61732eeaf', '5fc0f38ea20272f8', NOW(), NULL);
 	INSERT INTO rooms (room_name, room_code, created_at, room_owner_name) VALUES ('SaturdaysAreForTheBoys', '4444', NOW(), 'test.1');
 	INSERT INTO music (youtube_id, room_code, song_name) VALUES ('Kp7eSUU9oy8', '4444', '3005');
+	INSERT INTO previous_music (room_code, song_name) VALUES (4444, 'Kanye West - Stronger');
 SQL
 	echo "Finished creating database ${DB}";
 	else

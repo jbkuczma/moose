@@ -1,6 +1,6 @@
 {
   "name": "moose",
-  "version": "0.2.0",
+  "version": "0.4.0",
   "description": "UB CSE 442 project",
   "main": "server.js",
   "scripts": {

@@ -84,7 +84,7 @@ app.post('/song/add', function(request, response) {
     let name = request.body.name;
     let song = request.body.song;
     let roomCode = request.body.room;
-    let sql = 'INSERT INTO music (youtube_id, room_code, song_name) VALUES (?, ?, ?); ';
+    let sql = 'INSERT INTO music (youtube_id, room_code, song_name) VALUES (?, ?, ?);';
     connection.query(sql, [song, roomCode, name], function (error, results, fields) {
         if (error) {
             response.redirect('/rooms');
@@ -99,6 +99,35 @@ app.post('/song/remove', function(request, response) {
     connection.query(sql, [song, roomCode], function (error, results, fields) {
         if (error) {
             response.redirect('/rooms');
+        }
+    });
+});
+
+// add a song to the previously played songs for a room
+app.post('/room/:roomCode/previous', function(request, response) {
+    let songName = request.body.songName;
+    let roomCode = request.params.roomCode;
+    let sql = 'INSERT INTO previous_music (room_code, song_name) VALUES (?, ?)';
+    connection.query(sql, [roomCode, songName], function(error, results, fields) {
+        if (error) {
+            response.redirect('/rooms');
+        }
+    });
+});
+// get previously played songs for a room
+app.get('/room/:roomCode/previous', function(request, response) {
+    let roomCode = request.params.roomCode;
+    let sql = 'SELECT song_name FROM previous_music WHERE room_code=?';
+    connection.query(sql, roomCode, function(error, results, fields) {
+        if(results) {
+            let previousRoomMusic = results.map(function(row) {
+                return {
+                    song: row['song_name']
+                };
+            });
+            response.json({
+                'data': previousRoomMusic
+            });
         }
     });
 });
@@ -309,6 +338,7 @@ app.post('/room/delete', function(request, response) {
     let roomCode = request.body.room;
     let SQL = 'DELETE FROM music WHERE music.room_code=?';
     let SQL2 = 'DELETE FROM rooms WHERE rooms.room_code=?';
+    let SQL3 = 'DELETE FROM previous_music WHERE previous_music.room_code=?';
     connection.query(SQL, roomCode, function (error, results, fields){
         if (error) {
             response.redirect('/rooms');
@@ -317,6 +347,11 @@ app.post('/room/delete', function(request, response) {
             if (error) {
                 throw error;
             }
+            connection.query(SQL3, roomCode, function (error, results, fields){
+                if (error) {
+                    throw error;
+                }
+            });
         });
     });
 });
