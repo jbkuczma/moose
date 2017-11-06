@@ -57,6 +57,7 @@ passport.use('create-account', new LocalStrategy({ passReqToCallback: true, fail
             // query db to see if username exists
             let sql = 'SELECT username FROM users WHERE username=?';
             connection.query(sql, username1, function(error, results, fields) {
+                console.log(results[0])
                 if(results[0] || error) {
                     return done(null, false);
                 } else {
