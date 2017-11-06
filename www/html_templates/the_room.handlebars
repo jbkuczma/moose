@@ -36,22 +36,24 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-4">
-				<div class="row d-flex justify-content-center">
+                
+				    <div class="col-md-4">
 						{{#if isUserHost}}
-						<div class="card-header">
-							<h1 class="card-title"> Up Next </h1>
-						</div>
-						<div class="card-body">
-							<ul class="list-group" id="songQueue">
-								{{#queue}}
-									<li class="list-group-item songInQueue" id="{{songID}}"> {{songName}} </li>
-								{{/queue}}
-							</ul>
-						</div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h1 class="card-title"> Up Next </h1>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group" id="songQueue">
+                                    {{#queue}}
+                                        <li class="list-group-item songInQueue" id="{{songID}}"> {{songName}} </li>
+                                    {{/queue}}
+                                </ul>
+                            </div>
+                        </div>	
 						{{/if}}
-					</div>	
-				</div>
+                    </div>
+                
 				<div class="col-md-4">
 					<div class="card">
 						<div class="card-header">
