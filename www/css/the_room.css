@@ -75,3 +75,11 @@ body{
 	color: #ffffff;
 }
 
+#skipButton {
+	width: 100%;
+}
+
+#skipButton:hover {
+	cursor: pointer;
+}
+

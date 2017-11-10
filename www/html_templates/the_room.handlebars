@@ -27,12 +27,14 @@
 						{{#if isUserHost}}
 						<div id="player" class="embed-responsive-item">			
 
-						</div> 
+						</div>
 						{{/if}}
-					</div> 
-					<div class="row d-flex justify-content-center">
-						{{!-- <span id = "currentSong" id="{{currenSongID}}"> {{currentSongName}} </span> --}}
-					 </div> 
+					</div>
+					{{#if isUserHost}}
+						<div class="row d-flex justify-content-center">
+							<button id="skipButton"> Skip </button>
+						</div>
+					{{/if}}
 				</div>
 			</div>
 			<div class="row d-flex justify-content-center">
