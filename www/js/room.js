@@ -48,3 +48,29 @@ function addSongToQueue(event) {
         console.log('ok')
     });
 }
+
+function getPreviouslyPlayedMusic() {
+    var roomCode = window.location.href.split('/')[4]; // might change
+    var url = '/room/' + roomCode + '/previous';
+    fetch(url)
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(json) {
+        var previousEl = document.getElementById('previousSongs');
+        previousEl.innerHTML = '';
+        for(song in json['data']) {
+            var li = document.createElement('li');
+            li.classList.add('list-group-item');
+            li.classList.add('songInQueue');
+            li.textContent = json['data'][song]['song'];
+            previousEl.append(li);
+        }
+    });
+}
+
+// call it initially, then run on interval
+getPreviouslyPlayedMusic();
+setInterval(function() {
+    getPreviouslyPlayedMusic();
+}, 5000);
