@@ -23,6 +23,7 @@ body{
 .songResultButton{
 	background-color: #FFFFFF;
 	text-align: center;
+	width: 100%;
 	padding: 8px;
     white-space: normal;
 }
