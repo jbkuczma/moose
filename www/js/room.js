@@ -15,7 +15,7 @@ function loadSearch(){
             var song = document.createElement('button');
             song.textContent = json.data[n].title;	
             song.setAttribute('id', json.data[n].id);
-            song.classList.add('songResultButton');	
+            song.classList.add('btn', 'btn-outline-info','songResultButton');	
             song.addEventListener('click', addSongToQueue);				
             array.append(song);
         }
