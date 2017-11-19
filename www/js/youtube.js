@@ -41,18 +41,6 @@ function onYouTubeIframeAPIReady() {
         'onStateChange': onPlayerStateChange
     }
     });
-
-    // fetch('/song/remove', {
-    //     method: 'POST',
-    //     body: JSON.stringify(data),
-    //     headers: {
-    //         "Content-Type": "application/json"
-    //     }
-    // }).then(function(response) {
-    //     var remove = document.getElementById(songID);
-    //     document.getElementById('songQueue').removeChild(remove); // remove song from queue
-    //     console.log('removed')
-    // });
 }
 
 // 4. The API will call this function when the video player is ready.
@@ -83,6 +71,21 @@ function onPlayerStateChange(event) {
         }
         var songID = queue[0].id;
         player.loadVideoById(songID);
+        // first add song to previously played, then remove from music
+        var data = {
+            songName: queue[0].textContent
+        };
+        var url = '/room/' + roomCode + '/previous';
+        fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(function(message) {
+            console.log('good')
+        });
+
         var data = {
             song: songID,
             room: roomCode

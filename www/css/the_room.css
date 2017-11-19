@@ -3,29 +3,37 @@ body{
 }
 
 .card-header{
-	background-color: #0DDDE8;
+    background-color: #5989e5;
+    background-image: -webkit-gradient(linear, left top, right top, from(#5989e5), to(#37cfdc));
+    background-image: linear-gradient(to right, #5989e5, #37cfdc);
+    border: none !important;
+    text-transform: uppercase;
+    color: #fff;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    -webkit-transition: all 0.3s !important;
+    transition: all 0.3s !important;
 }
 
 .card-body{
-	background-color: #eeeeee;
+	background-color: #FFFFFF;
 }
 
 .songResultButton{
 	background-color: #FFFFFF;
 	text-align: center;
 	width: 100%;
-	border-radius: 3px;
-	padding: 3px;
-}
-
-.songResultButton:hover{
-	background-color: #eeeeee;
+	padding: 8px;
+    white-space: normal;
 }
 
 #moveSearch{
-	background-color: #FFFFFF;
+	background-color: #FC890F;
+    color: #FFFFFF;
 	text-align: center;
 	width: 100%;
+    cursor: pointer;
 }
 
 .text-center{
@@ -68,5 +76,10 @@ body{
 	bottom: 0;
 	background-color: rgba(0,0,0,0.6);
 	z-index: 2;
+}
+
+.Overlay-Message{
+	text-align: center;
+	color: #ffffff;
 }
 
