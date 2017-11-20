@@ -121,5 +121,13 @@ body{
 }
 
 
+@media (max-width:481px)  { 
+
+#Join_Code, #Create_Room{
+	-webkit-appearance: none;
+  	-webkit-border-radius: 0;
+	} 
+
+}
 
 
